@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b3033f1-2506-43f3-9a80-d0cd7ba2db94" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/licence_plates_site.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/licence_plates_site.iml" afterDir="false" />
+    <list default="true" id="7b3033f1-2506-43f3-9a80-d0cd7ba2db94" name="Changes" comment="add code/file contents">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/auth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/temporary_index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/markdown_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/markdown_page.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,67 +26,79 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "trevormurphy424"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/trevormurphy424/license-plate-tracker.git",
+    "accountId": "0ece3eff-0a05-4675-9aef-53d997f659f0"
+  }
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0505559416801393" />
-      <entry key="MS500" value="2.247634945391195" />
-      <entry key="S2" value="7.265024413697207" />
-      <entry key="S5" value="14.356797845630249" />
-      <entry key="S10" value="25.148737840322383" />
-      <entry key="S30" value="76.10413367112338" />
-      <entry key="S60" value="134.77067178193406" />
-      <entry key="M2" value="201.62973696817986" />
-      <entry key="M5" value="293.8772861766443" />
-      <entry key="M10" value="380.2325711344292" />
-      <entry key="M15" value="442.32158331903264" />
-      <entry key="M30" value="566.041448850122" />
-      <entry key="H1" value="684.8162850903716" />
-      <entry key="H2" value="772.1404796645751" />
-      <entry key="H4" value="825.8824359498333" />
-      <entry key="D1" value="877.0031930383179" />
-      <entry key="W1" value="886.4123735026317" />
+      <entry key="MS100" value="1.0000000132447955" />
+      <entry key="MS500" value="1.0281313937424947" />
+      <entry key="S2" value="1.6897431838535137" />
+      <entry key="S5" value="2.5980498838403174" />
+      <entry key="S10" value="3.173323108806927" />
+      <entry key="S30" value="3.6899125173993643" />
+      <entry key="S60" value="3.9475001843158775" />
+      <entry key="M2" value="8.92730298589494" />
+      <entry key="M5" value="65.57811537980163" />
+      <entry key="M10" value="171.43414540871817" />
+      <entry key="M15" value="261.51770863495386" />
+      <entry key="M30" value="479.48334980901353" />
+      <entry key="H1" value="751.3586073142087" />
+      <entry key="H2" value="995.6411073060035" />
+      <entry key="H4" value="1165.5754971859317" />
+      <entry key="D1" value="1341.36597368679" />
+      <entry key="W1" value="1375.2380320645448" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="3.37621883071362E-209" />
-      <entry key="S2" value="8.627446460989277E-53" />
-      <entry key="S5" value="2.0540757556400946E-21" />
-      <entry key="S10" value="6.285365655421097E-11" />
-      <entry key="S30" value="6.400927188800259E-4" />
-      <entry key="S60" value="0.03935079887095612" />
-      <entry key="M2" value="0.383588399994517" />
-      <entry key="M5" value="2.461899427632661" />
-      <entry key="M10" value="5.645671885222052" />
-      <entry key="M15" value="7.848060394454212" />
-      <entry key="M30" value="11.6552985846566" />
-      <entry key="H1" value="14.883568988777379" />
-      <entry key="H2" value="17.124003659629643" />
-      <entry key="H4" value="18.468719732985704" />
-      <entry key="D1" value="19.730431849290923" />
-      <entry key="W1" value="19.961118719992243" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="9.973434735062748E-110" />
+      <entry key="S5" value="2.5092151458939554E-44" />
+      <entry key="S10" value="1.5840920820936968E-22" />
+      <entry key="S30" value="5.571883643750668E-8" />
+      <entry key="S60" value="2.727531227636998E-4" />
+      <entry key="M2" value="0.02158742338296236" />
+      <entry key="M5" value="0.32037904107599674" />
+      <entry key="M10" value="0.8913298345563248" />
+      <entry key="M15" value="1.5962572328320717" />
+      <entry key="M30" value="4.454585451192514" />
+      <entry key="H1" value="9.24590196204318" />
+      <entry key="H2" value="14.032869480319784" />
+      <entry key="H4" value="17.501215888319066" />
+      <entry key="D1" value="21.165499533785155" />
+      <entry key="W1" value="21.878512858900088" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.2074201624422296" />
-      <entry key="MS500" value="1.7210000068938136" />
-      <entry key="S2" value="7.040281606478886" />
-      <entry key="S5" value="14.232074100961798" />
-      <entry key="S10" value="25.062496708388295" />
-      <entry key="S30" value="76.0426023603388" />
-      <entry key="S60" value="134.75737147184697" />
-      <entry key="M2" value="201.96133617017168" />
-      <entry key="M5" value="296.2767232685262" />
-      <entry key="M10" value="385.8147267936057" />
-      <entry key="M15" value="450.1107649098268" />
-      <entry key="M30" value="577.6517286685033" />
-      <entry key="H1" value="699.6704512688556" />
-      <entry key="H2" value="789.247375319412" />
-      <entry key="H4" value="844.3418810907076" />
-      <entry key="D1" value="896.7319668133455" />
-      <entry key="W1" value="906.3732524281139" />
+      <entry key="MS100" value="4.1978224640489136E-5" />
+      <entry key="MS500" value="0.14091665956672278" />
+      <entry key="S2" value="1.1147251900194313" />
+      <entry key="S5" value="2.2439577984652663" />
+      <entry key="S10" value="2.96030679111771" />
+      <entry key="S30" value="3.6085005798284238" />
+      <entry key="S60" value="3.905520536704815" />
+      <entry key="M2" value="8.926002633718113" />
+      <entry key="M5" value="65.88267680730017" />
+      <entry key="M10" value="172.310980536801" />
+      <entry key="M15" value="263.0987840342537" />
+      <entry key="M30" value="483.91903000199324" />
+      <entry key="H1" value="760.5853712098688" />
+      <entry key="H2" value="1009.6595117836482" />
+      <entry key="H4" value="1183.0676985477367" />
+      <entry key="D1" value="1362.5296563598724" />
+      <entry key="W1" value="1397.1162766242037" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -125,8 +131,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\trevo\Desktop\licence_plates_site\static" />
       <recent name="C:\Users\trevo\Desktop\licence_plates_site" />
+      <recent name="C:\Users\trevo\Desktop\licence_plates_site\static" />
       <recent name="C:\Users\trevo\Desktop\licence_plates_site\static\fonts" />
     </key>
   </component>
@@ -144,12 +150,25 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1789529781078</updated>
-      <workItem from="1789529782096" duration="5260000" />
+      <workItem from="1789529782096" duration="7361000" />
     </task>
+    <task id="LOCAL-00001" summary="add code/file contents">
+      <option name="closed" value="true" />
+      <created>1789535882672</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1789535882672</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add code/file contents" />
+    <option name="LAST_COMMIT_MESSAGE" value="add code/file contents" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/licence_plates_site$app.coverage" NAME="app Coverage Results" MODIFIED="1789532909524" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
