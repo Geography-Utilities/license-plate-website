@@ -63,7 +63,10 @@ def index():
 
 @app.route('/todo')
 def todo():
-    with open('notes.md', 'r') as f:
-        content = f.read()
-    html = markdown.markdown(content, extensions=['fenced_code', 'tables'])
-    return render_template('markdown_page.html', content=html)
+    if is_authenticated():
+        with open('notes.md', 'r') as f:
+            content = f.read()
+        html = markdown.markdown(content, extensions=['fenced_code', 'tables'])
+        return render_template('markdown_page.html', content=html)
+    else:
+        return render_template('unauthorized.html', logged_in=False)

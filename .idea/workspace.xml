@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b3033f1-2506-43f3-9a80-d0cd7ba2db94" name="Changes" comment="style: modify todo markdown page template">
-      <change afterPath="$PROJECT_DIR$/static/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+    <list default="true" id="7b3033f1-2506-43f3-9a80-d0cd7ba2db94" name="Changes" comment="!style: change formatting and refactor for standard page template. move login.">
+      <change afterPath="$PROJECT_DIR$/templates/unauthorized.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/notes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,61 +48,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.000001272125087" />
-      <entry key="S2" value="1.0661672323430005" />
-      <entry key="S5" value="1.6440774333799515" />
-      <entry key="S10" value="2.3897920627178544" />
-      <entry key="S30" value="3.4644756010151054" />
-      <entry key="S60" value="4.38983878362199" />
-      <entry key="M2" value="7.477576884899793" />
-      <entry key="M5" value="24.254616489972026" />
-      <entry key="M10" value="82.82598598353167" />
-      <entry key="M15" value="155.93991901530234" />
-      <entry key="M30" value="368.93062935388605" />
-      <entry key="H1" value="666.9464693273213" />
-      <entry key="H2" value="953.5863517834098" />
-      <entry key="H4" value="1161.0581689962407" />
-      <entry key="D1" value="1381.5421818129291" />
-      <entry key="W1" value="1424.6482177535277" />
+      <entry key="MS100" value="1.8872984170386253" />
+      <entry key="MS500" value="2.689187649718158" />
+      <entry key="S2" value="2.99781635224677" />
+      <entry key="S5" value="4.478655374704184" />
+      <entry key="S10" value="7.762914424225588" />
+      <entry key="S30" value="14.34669976402861" />
+      <entry key="S60" value="19.663309553781975" />
+      <entry key="M2" value="32.341618217679844" />
+      <entry key="M5" value="82.25767976366198" />
+      <entry key="M10" value="156.28557252173678" />
+      <entry key="M15" value="225.99559578999256" />
+      <entry key="M30" value="432.4393596958955" />
+      <entry key="H1" value="754.5856372935451" />
+      <entry key="H2" value="1094.752267037678" />
+      <entry key="H4" value="1355.707987413349" />
+      <entry key="D1" value="1644.4332226513932" />
+      <entry key="W1" value="1702.1225872932146" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="2.1845753290352965E-9" />
-      <entry key="MS500" value="0.018529914053296064" />
-      <entry key="S2" value="0.3689507106877737" />
-      <entry key="S5" value="0.6711001571204677" />
-      <entry key="S10" value="0.8192070294623134" />
-      <entry key="S30" value="0.9356883525580264" />
-      <entry key="S60" value="0.9673098564530505" />
-      <entry key="M2" value="0.983590891663506" />
-      <entry key="M5" value="1.0260615564980446" />
-      <entry key="M10" value="1.2813852121790557" />
-      <entry key="M15" value="1.7436724014300713" />
-      <entry key="M30" value="4.043925696604119" />
-      <entry key="H1" value="8.643815099064701" />
-      <entry key="H2" value="13.759487654831227" />
-      <entry key="H4" value="17.688323369518695" />
-      <entry key="D1" value="21.99839302757824" />
-      <entry key="W1" value="22.853752526703015" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="1.3699396180998423E-214" />
+      <entry key="S5" value="2.848922073729101E-86" />
+      <entry key="S10" value="1.6878750172121997E-43" />
+      <entry key="S30" value="5.5264565732617285E-15" />
+      <entry key="S60" value="7.434014129468858E-8" />
+      <entry key="M2" value="2.7267378268498103E-4" />
+      <entry key="M5" value="0.03875296802544133" />
+      <entry key="M10" value="0.24902645406643065" />
+      <entry key="M15" value="0.5850263286500977" />
+      <entry key="M30" value="2.342385797819514" />
+      <entry key="H1" value="6.578594199115528" />
+      <entry key="H2" value="12.003726113294166" />
+      <entry key="H4" value="16.521275623820408" />
+      <entry key="D1" value="21.749558300163073" />
+      <entry key="W1" value="22.81664221659336" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="2.2773449824975236E-9" />
-      <entry key="MS500" value="0.018693716633210577" />
-      <entry key="S2" value="0.48137218148574795" />
-      <entry key="S5" value="1.5937265078052143" />
-      <entry key="S10" value="2.7310753034236113" />
-      <entry key="S30" value="4.197610811799356" />
-      <entry key="S60" value="5.244075467626126" />
-      <entry key="M2" value="8.396939841648567" />
-      <entry key="M5" value="25.24804954389276" />
-      <entry key="M10" value="84.08536645988302" />
-      <entry key="M15" value="157.6643479206189" />
-      <entry key="M30" value="372.9552199315428" />
-      <entry key="H1" value="675.5711586678768" />
-      <entry key="H2" value="967.3310094345968" />
-      <entry key="H4" value="1178.7370510874266" />
-      <entry key="D1" value="1403.5386304688766" />
-      <entry key="W1" value="1447.5016819961122" />
+      <entry key="MS100" value="1.8514386060621215" />
+      <entry key="MS500" value="2.6781770105579827" />
+      <entry key="S2" value="2.994685376045051" />
+      <entry key="S5" value="4.476579775640359" />
+      <entry key="S10" value="7.760904642117935" />
+      <entry key="S30" value="14.336435998291197" />
+      <entry key="S60" value="19.627879045911378" />
+      <entry key="M2" value="32.28076707227743" />
+      <entry key="M5" value="82.2275935230681" />
+      <entry key="M10" value="156.4778160039106" />
+      <entry key="M15" value="226.53287037182224" />
+      <entry key="M30" value="434.74590462018324" />
+      <entry key="H1" value="761.1361505693246" />
+      <entry key="H2" value="1106.735961130676" />
+      <entry key="H4" value="1372.216810233743" />
+      <entry key="D1" value="1666.1802403325796" />
+      <entry key="W1" value="1724.9388530624155" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -152,7 +154,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1789529781078</updated>
-      <workItem from="1789529782096" duration="8464000" />
+      <workItem from="1789529782096" duration="9758000" />
     </task>
     <task id="LOCAL-00001" summary="add code/file contents">
       <option name="closed" value="true" />
@@ -170,7 +172,15 @@
       <option name="project" value="LOCAL" />
       <updated>1789537989867</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="!style: change formatting and refactor for standard page template. move login.">
+      <option name="closed" value="true" />
+      <created>1789539326448</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1789539326448</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,7 +189,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add code/file contents" />
     <MESSAGE value="style: modify todo markdown page template" />
-    <option name="LAST_COMMIT_MESSAGE" value="style: modify todo markdown page template" />
+    <MESSAGE value="!style: change formatting and refactor for standard page template. move login." />
+    <option name="LAST_COMMIT_MESSAGE" value="!style: change formatting and refactor for standard page template. move login." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/licence_plates_site$app.coverage" NAME="app Coverage Results" MODIFIED="1789532909524" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

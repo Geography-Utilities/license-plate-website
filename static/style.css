@@ -18,3 +18,46 @@ footer {
     gap: 1rem;
     padding: 1rem;
 }
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+header, footer {
+    flex-shrink: 0;
+}
+
+main {
+    flex: 1;
+    padding: 1vh 3vw;
+}
+
+.discord-login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #5865F2;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-family: 'discord', sans-serif;
+}
+.discord-login-btn:hover {
+    background-color: #4752C4;
+}
+.discord-login-btn svg {
+    width: 60px;
+}
+
+@font-face {
+        font-family: 'discord';
+        src: url('{{ url_for('static', filename='fonts/discord.woff2') }}') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }

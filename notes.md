@@ -55,3 +55,4 @@
 4. figure out exact flask structure for multiple pages with same template. how to have list of states w/ individually formatted pages (shouldn't be too bad)
 5. proper full site formatting
         - somebody else do graphic design, i can do css
+6. fix login redirect to maintain current page, not redirect to /
