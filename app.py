@@ -22,7 +22,7 @@ discord = oauth.register(
 @app.route('/login')
 def login():
     redirect_uri = os.environ["DISCORD_REDIRECT_URI"]
-    return discord.authorize_redirect(redirect_uri)
+    return discord.authorize_redirect(redirect_uri, prompt='none')
 
 @app.route('/auth/callback')
 def auth_callback():
