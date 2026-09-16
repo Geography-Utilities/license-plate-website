@@ -2,6 +2,7 @@ import os
 from authlib.integrations.flask_client import OAuth
 from flask import Flask, session, redirect, url_for, render_template
 import requests
+import markdown
 
 from auth import *
 
@@ -59,3 +60,10 @@ def index():
     username = user['username'] if user else 'Guest'
     logged_in = is_authenticated()
     return render_template('index.html', user=user, username=username, logged_in=logged_in)
+
+@app.route('/todo')
+def todo():
+    with open('notes.md', 'r') as f:
+        content = f.read()
+    html = markdown.markdown(content, extensions=['fenced_code', 'tables'])
+    return render_template('markdown_page.html', content=html)
