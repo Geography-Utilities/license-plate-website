@@ -1,0 +1,53 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="altgraph" />
+          <option value="branca" />
+          <option value="certifi" />
+          <option value="charset-normalizer" />
+          <option value="click" />
+          <option value="colorama" />
+          <option value="customtkinter" />
+          <option value="darkdetect" />
+          <option value="decorator" />
+          <option value="folium" />
+          <option value="future" />
+          <option value="geocoder" />
+          <option value="idna" />
+          <option value="Jinja2" />
+          <option value="MarkupSafe" />
+          <option value="narwhals" />
+          <option value="numpy" />
+          <option value="packaging" />
+          <option value="pandas" />
+          <option value="pefile" />
+          <option value="pillow" />
+          <option value="pillow_heif" />
+          <option value="plotly" />
+          <option value="pyinstaller" />
+          <option value="pyinstaller-hooks-contrib" />
+          <option value="pyperclip" />
+          <option value="python-dateutil" />
+          <option value="pywin32" />
+          <option value="pywin32-ctypes" />
+          <option value="ratelim" />
+          <option value="requests" />
+          <option value="setuptools" />
+          <option value="six" />
+          <option value="tkintermapview" />
+          <option value="tzdata" />
+          <option value="urllib3" />
+          <option value="xyzservices" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+      <option name="processCode" value="true" />
+      <option name="processLiterals" value="true" />
+      <option name="processComments" value="true" />
+    </inspection_tool>
+  </profile>
+</component>
