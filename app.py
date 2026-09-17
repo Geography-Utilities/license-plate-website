@@ -80,7 +80,8 @@ def todo():
 ## It needs to be updated to use the proper location designations (likely LEVEL2_LOCATION) rather than just location since we'll have formatted hierarchical categories.
 @app.route("/<location>")
 def location_page(location):
+    logged_in = is_authenticated()
     location=location.title()
     if location not in LOCATIONS:
         abort(404)
-    return render_template("location.html", location=location)
+    return render_template("location.html", location=location, logged_in=logged_in)
