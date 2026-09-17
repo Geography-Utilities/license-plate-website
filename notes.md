@@ -54,3 +54,5 @@
         - somebody other than me source images please
 4. proper full site formatting
         - somebody else do graphic design, i can do css
+5. add ToS
+6. website-wide variables (environment?) for name, formatting, etc.
