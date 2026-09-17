@@ -1,31 +1,80 @@
 ﻿# License Plate Tracker
 
-## Install
-### Virtual Environment
-Ensure that you have python 3.11 or greater installed. Create a virtual environment:
+## Development Setup
+### Prerequisites
+Install Python 3.11 or greater and Docker with Docker Compose.
+
+### Create the virtual environment
 ```bash
 python -m venv .venv
 ```
 
-**Activate that environment**:
-Windows:
-```bash
-./.venv/Scripts/activate
-```
-If you have typical script execution policy, look up a tutorial on how to disable it temporarily.
+Activate it before running the remaining commands.
+
 Linux:
 ```bash
-source ./.venv/bin/activate
+source .venv/bin/activate
 ```
 
-### Install requirements:
+Windows:
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### Install dependencies
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
+### Configure the environment
+Copy the example environment file:
 
-### Run in development mode:
-This still isn't perfect, since authentication won't work. In the very near future, a dev environment variable will be added to disable authentication and give full access for this purpose.
+Linux:
+```bash
+cp .env.example .env
+```
+
+Windows:
+```powershell
+Copy-Item .env.example .env
+```
+
+Set `FLASK_SECRET_KEY` in `.env`. Discord variables can remain empty unless you
+want to test login.
+
+### Start PostgreSQL
+From the project root, run:
+
+```bash
+docker compose -f development/docker-compose.yml up -d
+```
+
+The development database is available at
+`postgresql://plates_dev:devpassword@localhost:5432/plates_dev`.
+
+### Apply database migrations
+```bash
+flask db upgrade
+```
+
+For future model changes, generate and apply a migration with:
+
+```bash
+flask db migrate -m "describe the change"
+flask db upgrade
+```
+
+### Run the application
 ```bash
 flask run
 ```
+
+Open <http://127.0.0.1:5000> in a browser.
+
+To stop PostgreSQL when finished:
+
+```bash
+docker compose -f development/docker-compose.yml down
+```
+
+The database data is kept in the `plates_dev_data` Docker volume.

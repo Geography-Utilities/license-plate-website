@@ -6,15 +6,23 @@ import markdown
 from urllib.parse import urlparse, urljoin
 
 from auth import *
+from config import get_config
+from database import init_db
 
-app = Flask(__name__)
-app.secret_key = os.environ["FLASK_SECRET_KEY"]
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(get_config())
+    init_db(app)
+    import models  # noqa: F401
+    return app
+
+app = create_app()
 
 oauth = OAuth(app)
 discord = oauth.register(
     name='discord',
-    client_id=os.environ["DISCORD_CLIENT_ID"],
-    client_secret=os.environ["DISCORD_CLIENT_SECRET"],
+    client_id=os.environ.get("DISCORD_CLIENT_ID"),
+    client_secret=os.environ.get("DISCORD_CLIENT_SECRET"),
     access_token_url='https://discord.com/api/oauth2/token',
     authorize_url='https://discord.com/api/oauth2/authorize',
     api_base_url='https://discord.com/api/',
