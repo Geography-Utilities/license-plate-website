@@ -1,8 +1,9 @@
 import os
 from authlib.integrations.flask_client import OAuth
-from flask import Flask, session, redirect, url_for, render_template
+from flask import Flask, session, redirect, url_for, render_template, request
 import requests
 import markdown
+from urllib.parse import urlparse, urljoin
 
 from auth import *
 
@@ -20,9 +21,17 @@ discord = oauth.register(
     client_kwargs={'scope': 'identify guilds'},
 )
 
+def is_safe_url(target):
+    if not target:
+        return False
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
+
 @app.route('/login')
 def login():
     redirect_uri = os.environ["DISCORD_REDIRECT_URI"]
+    session["next_url"] = request.args.get("next", "/")
     return discord.authorize_redirect(redirect_uri, prompt='none')
 
 @app.route('/auth/callback')
@@ -47,7 +56,10 @@ def auth_callback():
 
     user_info['is_member'] = is_member
     session['user'] = user_info
-    return redirect('/')
+    next_url = session.pop("next_url", None)
+    if not is_safe_url(next_url):
+        next_url = url_for("index")
+    return redirect(next_url)
 
 @app.route('/logout')
 def logout():
