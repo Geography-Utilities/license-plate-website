@@ -1,6 +1,6 @@
 import os
 from authlib.integrations.flask_client import OAuth
-from flask import Flask, session, redirect, url_for, render_template
+from flask import Flask, session, redirect, url_for, render_template, abort
 import requests
 import markdown
 
@@ -19,6 +19,10 @@ discord = oauth.register(
     api_base_url='https://discord.com/api/',
     client_kwargs={'scope': 'identify guilds'},
 )
+
+## this is a temporary testing variable. mid-level regions will be pulled from the database eventually, once it exists.
+LOCATIONS=["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
+
 
 @app.route('/login')
 def login():
@@ -70,3 +74,13 @@ def todo():
         return render_template('markdown_page.html', content=html)
     else:
         return render_template('unauthorized.html', logged_in=False)
+
+
+## This is temporary just for testing
+## It needs to be updated to use the proper location designations (likely LEVEL2_LOCATION) rather than just location since we'll have formatted hierarchical categories.
+@app.route("/<location>")
+def location_page(location):
+    location=location.title()
+    if location not in LOCATIONS:
+        abort(404)
+    return render_template("location.html", location=location)
