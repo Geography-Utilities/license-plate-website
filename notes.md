@@ -52,7 +52,7 @@
         - vague ideas on how to do this
         - need to acquire fonts
         - somebody other than me source images please
-4. figure out exact flask structure for multiple pages with same template. how to have list of states w/ individually formatted pages (shouldn't be too bad)
-5. proper full site formatting
+4. proper full site formatting
         - somebody else do graphic design, i can do css
-6. fix login redirect to maintain current page, not redirect to /
+5. add ToS
+6. website-wide variables (environment?) for name, formatting, etc.
