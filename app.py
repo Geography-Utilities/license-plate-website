@@ -1,6 +1,6 @@
 import os
 from authlib.integrations.flask_client import OAuth
-from flask import Flask, session, redirect, url_for, render_template, request
+from flask import Flask, session, redirect, url_for, render_template, abort, request
 import requests
 import markdown
 from urllib.parse import urlparse, urljoin
@@ -27,6 +27,10 @@ def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
+
+## this is a temporary testing variable. mid-level regions will be pulled from the database eventually, once it exists.
+LOCATIONS=["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New-Hampshire", "New-Jersey", "New-Mexico", "New-York", "North-Carolina", "North-Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode-Island", "South-Carolina", "South-Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West-Virginia", "Wisconsin", "Wyoming"]
+
 
 @app.route('/login')
 def login():
@@ -82,3 +86,15 @@ def todo():
         return render_template('markdown_page.html', content=html)
     else:
         return render_template('unauthorized.html', logged_in=False)
+
+
+## This is temporary just for testing
+## It needs to be updated to use the proper location designations (likely LEVEL2_LOCATION) rather than just location since we'll have formatted hierarchical categories.
+@app.route("/<location>")
+def location_page(location):
+    logged_in = is_authenticated()
+    location=location.title()
+    if location not in LOCATIONS:
+        abort(404)
+    location = location.replace("-", " ")
+    return render_template("location.html", location=location, logged_in=logged_in)

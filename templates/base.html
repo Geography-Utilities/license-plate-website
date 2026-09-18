@@ -5,6 +5,37 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     {% block head %}{% endblock %}
     <script defer src="https://metrics.geoutils.us/script.js" data-website-id="4a3504d4-f691-41c1-8c5a-2a3062c28a79"></script>
+    <style>
+        .dev-notice {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 18px;
+          border: 2px dashed #f0ad4e;
+          border-radius: 8px;
+          background-color: #fff8e6;
+          color: #7a5200;
+          font-family: inherit;
+          margin: 16px 0;
+        }
+
+        .dev-notice-icon {
+          font-size: 1.5rem;
+          flex-shrink: 0;
+        }
+
+        .dev-notice-text strong {
+          display: block;
+          font-size: 0.95rem;
+          margin-bottom: 2px;
+        }
+
+        .dev-notice-text p {
+          margin: 0;
+          font-size: 0.85rem;
+          opacity: 0.85;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -27,6 +58,13 @@
 </header>
 
     <main>
+        <div class="dev-notice">
+          <span class="dev-notice-icon"></span>
+          <div class="dev-notice-text">
+            <strong>Under Development</strong>
+            <p>This site is currently in development. Running branch <b>feat/region-pages</b>.</p>
+          </div>
+        </div>
         {% block content %}{% endblock %}
     </main>
 
