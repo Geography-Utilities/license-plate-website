@@ -62,9 +62,16 @@ def auth_callback():
         YOUR_SERVER_ID = os.environ["SERVER_ID"]
         is_member = any(g['id'] == YOUR_SERVER_ID for g in guilds)
 
+    discord_id = user_info['id']
+    discord_username = user_info['username']
+
+    user = discord_user_login(discord_id, discord_username)
+
     user_info['is_member'] = is_member
+    user_info['permissions'] = user.permission_level
     session['user'] = user_info
     next_url = session.pop("next_url", None)
+
     if not is_safe_url(next_url):
         next_url = url_for("index")
     return redirect(next_url)
@@ -79,7 +86,8 @@ def index():
     user = session.get('user')
     username = user['username'] if user else 'Guest'
     logged_in = is_authenticated()
-    return render_template('index.html', user=user, username=username, logged_in=logged_in)
+    permissions = user['permissions'] if logged_in else 0
+    return render_template('index.html', user=user, username=username, logged_in=logged_in, user_permissions=permissions)
 
 @app.route('/todo')
 def todo():
@@ -90,3 +98,17 @@ def todo():
         return render_template('markdown_page.html', content=html)
     else:
         return render_template('unauthorized.html', logged_in=False)
+
+@app.route('/users')
+def users():
+    users = User.query.all()
+    print(users)
+    if is_authenticated():
+        return render_template('users.html', users=users)
+    else:
+        return render_template('unauthorized.html', logged_in=False)
+
+@app.route('/users/edit/a/<int:id>', methods=['GET', 'POST'])
+def edit_user(id):
+    user = User.query.get_or_404(id)
+    return render_template('admin_edit_user.html', user=user)
