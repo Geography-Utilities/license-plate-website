@@ -118,7 +118,7 @@ def todo():
 def users():
     if not is_authenticated() or session['user'].get('permission_level', 0) < 3:
         return render_template('unauthorized.html', logged_in=False)
-    return render_template('users.html', users=User.query.all(), logged_in=True)
+    return render_template('admin_users.html', users=User.query.all(), logged_in=True)
 
 @app.route('/a/users/edit/<int:id>', methods=['GET', 'POST'])
 def edit_user(id):
