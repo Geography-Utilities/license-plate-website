@@ -127,8 +127,8 @@ def edit_user(id):
     if not is_authenticated():
         return render_template('unauthorized.html', logged_in=False)
 
-    user = session.get('user')
-    if user["permission_level"] < 3:
+    current_db_user = User.query.filter_by(discord_id=session['user'].get('id')).first()
+    if current_db_user is None or current_db_user.permission_level < 3:
         return render_template('unauthorized.html', logged_in=False)
 
     user = User.query.get_or_404(id)
