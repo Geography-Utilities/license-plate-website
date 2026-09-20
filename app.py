@@ -32,6 +32,15 @@ def is_safe_url(target):
 LOCATIONS=["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New-Hampshire", "New-Jersey", "New-Mexico", "New-York", "North-Carolina", "North-Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode-Island", "South-Carolina", "South-Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West-Virginia", "Wisconsin", "Wyoming"]
 
 
+@app.context_processor
+def inject_user():
+    user = session.get('user')
+    return {
+        "logged_in": is_authenticated(),
+        "username": user['username'] if user else None,
+        "user": user
+    }
+
 @app.route('/login')
 def login():
     redirect_uri = os.environ["DISCORD_REDIRECT_URI"]
@@ -75,7 +84,7 @@ def index():
     user = session.get('user')
     username = user['username'] if user else 'Guest'
     logged_in = is_authenticated()
-    return render_template('index.html', user=user, username=username, logged_in=logged_in)
+    return render_template('index.html')
 
 @app.route('/todo')
 def todo():
@@ -83,9 +92,9 @@ def todo():
         with open('notes.md', 'r') as f:
             content = f.read()
         html = markdown.markdown(content, extensions=['fenced_code', 'tables'])
-        return render_template('markdown_page.html', content=html)
+        return render_template('markdown_page.html', content=html, logged_in=is_authenticated())
     else:
-        return render_template('unauthorized.html', logged_in=False)
+        return render_template('unauthorized.html')
 
 
 ## This is temporary just for testing
@@ -97,4 +106,4 @@ def location_page(location):
     if location not in LOCATIONS:
         abort(404)
     location = location.replace("-", " ")
-    return render_template("location.html", location=location, logged_in=logged_in)
+    return render_template("location.html", location=location)
