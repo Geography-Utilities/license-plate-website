@@ -3,8 +3,41 @@
 <head>
     <title>{% block title %}My Site{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pico.cyan.min.css') }}">
     {% block head %}{% endblock %}
     <script defer src="https://metrics.geoutils.us/script.js" data-website-id="4a3504d4-f691-41c1-8c5a-2a3062c28a79"></script>
+    <style>
+        .dev-notice {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 18px;
+          border: 2px dashed #0ab1b1;
+          background: #025d5d;
+          border-radius: 8px;
+          color: #C3FCFA;
+          font-family: inherit;
+          margin: 16px 0;
+        }
+
+        .dev-notice-icon {
+          font-size: 1.5rem;
+          flex-shrink: 0;
+        }
+
+        .dev-notice-text strong {
+          display: block;
+          font-size: 0.95rem;
+          margin-bottom: 2px;
+        }
+
+        .dev-notice-text p {
+          margin: 0;
+          font-size: 0.85rem;
+          opacity: 0.85;
+          color: #25DDDD;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -27,12 +60,18 @@
 </header>
 
     <main>
+        <div class="dev-notice">
+          <span class="dev-notice-icon"></span>
+          <div class="dev-notice-text">
+            <strong>Under Development</strong>
+            <p>This site is currently in development. Running branch <b>main</b>.</p>
+          </div>
+        </div>
         {% block content %}{% endblock %}
     </main>
 
     <footer>
-        <p>&copy; 2026 Site Name (TBD)</p>
-        <a href="https://geoutils.us/privacy.html">Privacy Policy</a>
+        <p>&copy; 2026 {{site_name}}<a style="padding: 30pt" href="https://geoutils.us/privacy.html">Privacy Policy</a></p>
     </footer>
 </body>
 </html>

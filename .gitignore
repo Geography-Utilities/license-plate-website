@@ -5,3 +5,10 @@
 venv
 
 migrations/__pycache__/
+.ai
+
+__pycache__/
+
+static/content/
+
+.idea/workspace.xml
