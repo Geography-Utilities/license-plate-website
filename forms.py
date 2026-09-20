@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, SelectField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, InputRequired, Length
 
 class AdminEditUser(FlaskForm):
     display_name = StringField('Display Name', validators=[DataRequired(), Length(max=100)])
@@ -12,5 +12,5 @@ class AdminEditUser(FlaskForm):
         'Permission Level',
         choices=[(0, 'Read-only'), (1, 'Submit'), (2, 'Moderator'), (3, 'Site Admin')],
         coerce=int,
-        validators=[DataRequired()]
+        validators=[InputRequired()]
     )
