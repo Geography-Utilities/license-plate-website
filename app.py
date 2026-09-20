@@ -99,16 +99,15 @@ def todo():
     else:
         return render_template('unauthorized.html', logged_in=False)
 
-@app.route('/users')
+@app.route('/a/users')
 def users():
-    users = User.query.all()
-    print(users)
+    user_list = User.query.all()
     if is_authenticated():
-        return render_template('users.html', users=users)
+        return render_template('users.html', users=user_list)
     else:
         return render_template('unauthorized.html', logged_in=False)
 
-@app.route('/users/edit/a/<int:id>', methods=['GET', 'POST'])
+@app.route('/a/users/edit/<int:id>', methods=['GET', 'POST'])
 def edit_user(id):
     user = User.query.get_or_404(id)
     return render_template('admin_edit_user.html', user=user)
