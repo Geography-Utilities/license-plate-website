@@ -119,8 +119,6 @@ def users():
     if not is_authenticated() or session['user'].get('permission_level', 0) < 3:
         return render_template('unauthorized.html', logged_in=False)
     return render_template('users.html', users=User.query.all(), logged_in=True)
-    else:
-        return render_template('unauthorized.html', logged_in=False)
 
 @app.route('/a/users/edit/<int:id>', methods=['GET', 'POST'])
 def edit_user(id):
@@ -150,7 +148,6 @@ def edit_user(id):
         form = AdminEditUser(obj=user)
 
     return render_template('admin_edit_user.html', user=user, form=form)
-        return render_template('unauthorized.html')
 
 
 ## This is temporary just for testing
