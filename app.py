@@ -1,6 +1,6 @@
 import os
 from authlib.integrations.flask_client import OAuth
-from flask import Flask, session, redirect, url_for, render_template, request
+from flask import Flask, session, redirect, url_for, render_template, request, flash
 import requests
 import markdown
 from urllib.parse import urlparse, urljoin
@@ -8,6 +8,7 @@ from urllib.parse import urlparse, urljoin
 from auth import *
 from config import get_config
 from database import init_db
+from forms import *
 
 def create_app():
     app = Flask(__name__)
@@ -68,7 +69,7 @@ def auth_callback():
     user = discord_user_login(discord_id, discord_username)
 
     user_info['is_member'] = is_member
-    user_info['permissions'] = user.permission_level
+    user_info['permission_level'] = user.permission_level
     session['user'] = user_info
     next_url = session.pop("next_url", None)
 
@@ -86,7 +87,7 @@ def index():
     user = session.get('user')
     username = user['username'] if user else 'Guest'
     logged_in = is_authenticated()
-    permissions = user['permissions'] if logged_in else 0
+    permissions = user['permission_level'] if logged_in else 0
     return render_template('index.html', user=user, username=username, logged_in=logged_in, user_permissions=permissions)
 
 @app.route('/todo')
@@ -109,5 +110,29 @@ def users():
 
 @app.route('/a/users/edit/<int:id>', methods=['GET', 'POST'])
 def edit_user(id):
+    if not is_authenticated():
+        return render_template('unauthorized.html', logged_in=False)
+
+    user = session.get('user')
+    if user["permission_level"] < 3:
+        return render_template('unauthorized.html', logged_in=False)
+
     user = User.query.get_or_404(id)
-    return render_template('admin_edit_user.html', user=user)
+
+    if request.method == 'POST':
+        form = AdminEditUser(request.form)
+        if form.validate():
+            user.display_name = form.display_name.data
+            user.email = form.email.data
+            user.alpca = form.alpca.data
+            user.home_state = form.home_state.data
+            user.home_country = form.home_country.data
+            user.permission_level = form.permission_level.data
+            db.session.commit()
+            flash('User updated.', 'success')
+        else:
+            flash('Please correct the errors below.', 'error')
+    else:
+        form = AdminEditUser(obj=user)
+
+    return render_template('admin_edit_user.html', user=user, form=form)

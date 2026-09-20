@@ -6,5 +6,7 @@ class User(db.Model):
     display_name = db.Column(db.String(100), nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=True)
     alpca = db.Column(db.String(100), nullable=True)
+    home_country = db.Column(db.String(100), nullable=True)
+    home_state = db.Column(db.String(100), nullable=True)
     permission_level = db.Column(db.Integer, default=1)  # 0: view-only, 1: submit, 2: moderator, 3: superuser
     
