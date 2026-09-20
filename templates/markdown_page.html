@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Notes</title>
-    <style>
-        body {
-            font-family: sans-serif;
-        }
-    </style>
-</head>
-<body>
-    {{ content | safe }}
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Notes{% endblock %}
+
+{% block content %}{{ content | safe }}{% endblock %}
