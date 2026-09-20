@@ -110,24 +110,24 @@ def todo():
         with open('notes.md', 'r') as f:
             content = f.read()
         html = markdown.markdown(content, extensions=['fenced_code', 'tables'])
-        return render_template('markdown_page.html', content=html, logged_in=is_authenticated())
+        return render_template('markdown_page.html', content=html)
     else:
-        return render_template('unauthorized.html', logged_in=False)
+        return render_template('unauthorized.html')
 
 @app.route('/a/users')
 def users():
     if not is_authenticated() or session['user'].get('permission_level', 0) < 3:
-        return render_template('unauthorized.html', logged_in=False)
-    return render_template('admin_users.html', users=User.query.all(), logged_in=True)
+        return render_template('unauthorized.html')
+    return render_template('admin_users.html', users=User.query.all())
 
 @app.route('/a/users/edit/<int:id>', methods=['GET', 'POST'])
 def edit_user(id):
     if not is_authenticated():
-        return render_template('unauthorized.html', logged_in=False)
+        return render_template('unauthorized.html')
 
     current_db_user = User.query.filter_by(discord_id=session['user'].get('id')).first()
     if current_db_user is None or current_db_user.permission_level < 3:
-        return render_template('unauthorized.html', logged_in=False)
+        return render_template('unauthorized.html')
 
     user = User.query.get_or_404(id)
 
