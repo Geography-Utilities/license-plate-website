@@ -116,9 +116,9 @@ def todo():
 
 @app.route('/a/users')
 def users():
-    user_list = User.query.all()
-    if is_authenticated():
-        return render_template('users.html', users=user_list)
+    if not is_authenticated() or session['user'].get('permission_level', 0) < 3:
+        return render_template('unauthorized.html', logged_in=False)
+    return render_template('users.html', users=User.query.all(), logged_in=True)
     else:
         return render_template('unauthorized.html', logged_in=False)
 
