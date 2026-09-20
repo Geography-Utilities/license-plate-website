@@ -16,8 +16,8 @@
     {% for user in users %}
     <tr>
       <td>{{ user.id }}</td>
-      <td>{{ user.username or "-" }}</td>
       <td>{{ user.display_name or "-" }}</td>
+      <td>{{ user.discord_id or "-" }}</td>
       <td>{{ user.email or "-"}}</td>
       <td>{{ user.permission_level }}</td>
       <td><a href="{{ url_for('edit_user', id=user.id) }}">Edit User</a></td>

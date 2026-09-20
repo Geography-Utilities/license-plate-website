@@ -77,7 +77,7 @@ def auth_callback():
         YOUR_SERVER_ID = os.environ["SERVER_ID"]
         is_member = any(g['id'] == YOUR_SERVER_ID for g in guilds)
 
-    discord_id = user_info['id']
+    discord_id = user_info['discord_id']
     discord_username = user_info['username']
 
     user = discord_user_login(discord_id, discord_username)
