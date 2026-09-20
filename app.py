@@ -38,7 +38,8 @@ def inject_user():
     return {
         "logged_in": is_authenticated(),
         "username": user['username'] if user else None,
-        "user": user
+        "user": user,
+        "site_name": "Site Name"
     }
 
 @app.route('/login')
