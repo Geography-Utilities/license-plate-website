@@ -3,6 +3,7 @@
 <head>
     <title>{% block title %}My Site{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pico.cyan.min.css') }}">
     {% block head %}{% endblock %}
     <script defer src="https://metrics.geoutils.us/script.js" data-website-id="4a3504d4-f691-41c1-8c5a-2a3062c28a79"></script>
     <style>
@@ -11,10 +12,10 @@
           align-items: center;
           gap: 12px;
           padding: 14px 18px;
-          border: 2px dashed #f0ad4e;
+          border: 2px dashed #0ab1b1;
+          background: #025d5d;
           border-radius: 8px;
-          background-color: #fff8e6;
-          color: #7a5200;
+          color: #C3FCFA;
           font-family: inherit;
           margin: 16px 0;
         }
@@ -34,6 +35,7 @@
           margin: 0;
           font-size: 0.85rem;
           opacity: 0.85;
+          color: #25DDDD;
         }
     </style>
 </head>
@@ -69,8 +71,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 Site Name (TBD)</p>
-        <a href="https://geoutils.us/privacy.html">Privacy Policy</a>
+        <p>&copy; 2026 Site Name (TBD)<a style="padding: 30pt" href="https://geoutils.us/privacy.html">Privacy Policy</a></p>
     </footer>
 </body>
 </html>

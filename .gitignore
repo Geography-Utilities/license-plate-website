@@ -3,3 +3,9 @@
 
 .venv
 venv
+
+.ai
+
+__pycache__/
+
+static/content/
