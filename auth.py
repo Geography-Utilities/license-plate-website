@@ -1,19 +1,22 @@
-from flask import session, render_template, current_app, g
+from flask import session, render_template, current_app
 from models import User
 from database import db
 from functools import wraps
 from sqlalchemy.exc import IntegrityError
 
 def current_user():
-    return session.get('user')
+    user_id = session.get("user_id")
+    if user_id is None:
+        return None
+    return db.session.get(User, user_id)
 
 def is_authenticated():
     return current_user() is not None
 
-def discord_user_login(discord_id, discord_name):
+def discord_user_login(discord_id, display_name):
     user = User.query.filter_by(discord_id=discord_id).first()
     if user is None:
-        user = User(discord_id=discord_id, display_name=discord_name)
+        user = User(discord_id=discord_id, display_name=display_name)
         db.session.add(user)
         db.session.commit()
     return user

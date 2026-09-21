@@ -33,11 +33,11 @@
 
 {% block content %}
 <div class="centered_box">
-    <h1>Welcome, {{ username }}!</h1>
+    <h1>Welcome, {{ display_name }}!</h1>
 
     <p style="font-size:6pt;">See old homepage: <a href="/static/temporary_index.html">link</a></p>
 
-    {% if user.is_member %}
+    {% if is_member %}
         <p>If you are seeing this message, you have the below permissions during development. For more information, contact <i>mrpenguin424</i> via Discord.<br>Click <a href="/todo">here</a> to see a list of to-dos pulled from Discord.</p>
         <p>Your current permissions level is: {% if user_permissions == 0 %}Read-only{% elif user_permissions == 1 %}Submit{% elif user_permissions == 2 %}Moderate{% elif user_permissions == 3 %}Super-user{% else %}Unknown{% endif %}</p>
     {% else %}
