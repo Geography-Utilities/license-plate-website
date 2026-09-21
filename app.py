@@ -101,7 +101,7 @@ def index():
     user = session.get('user')
     username = user['username'] if user else 'Guest'
     logged_in = is_authenticated()
-    permissions = user['permission_level'] if logged_in else 0
+permissions = user.get('permission_level', user.get('permissions', 0)) if logged_in else 0
     return render_template('index.html', user=user, username=username, logged_in=logged_in, user_permissions=permissions)
 
 @app.route('/todo')
