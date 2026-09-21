@@ -6,13 +6,18 @@ import markdown
 from urllib.parse import urlparse, urljoin
 
 from auth import *
-from config import get_config
+from config import get_config, load_dev_auth_level
 from database import init_db
 from forms import *
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(get_config())
+    app.config["DEV_AUTH_LEVEL"] = load_dev_auth_level()
+    if app.config["DEV_AUTH_LEVEL"] is not None:
+        app.logger.warning("DEV AUTH OVERRIDE ACTIVE: all clients are level %s",
+                           app.config["DEV_AUTH_LEVEL"])
+    app.config["AUTH_OVERRIDE_ACTIVE"] = app.config["DEV_AUTH_LEVEL"] is not None
     init_db(app)
     import models  # noqa: F401
     return app
@@ -51,6 +56,10 @@ def inject_user():
         "site_name": "Site Name"
     }
 
+@app.context_processor
+def inject_dev_flag():
+    return {"auth_override_active": app.config["AUTH_OVERRIDE_ACTIVE"]}
+
 @app.route('/login')
 def login():
     redirect_uri = os.environ["DISCORD_REDIRECT_URI"]
@@ -81,6 +90,7 @@ def auth_callback():
     discord_username = user_info['username']
 
     user = discord_user_login(discord_id, discord_username)
+    session["user_id"] = user.id
 
     user_info['is_member'] = is_member
     user_info['permission_level'] = user.permission_level
@@ -94,6 +104,7 @@ def auth_callback():
 @app.route('/logout')
 def logout():
     session.pop('user', None)
+    session.pop('user_id', None)
     return redirect('/')
 
 @app.route('/')
@@ -105,6 +116,7 @@ def index():
     return render_template('index.html', user=user, username=username, logged_in=logged_in, user_permissions=permissions)
 
 @app.route('/todo')
+@require_level(1)
 def todo():
     if is_authenticated():
         with open('notes.md', 'r') as f:
@@ -115,20 +127,13 @@ def todo():
         return render_template('unauthorized.html')
 
 @app.route('/a/users')
+@require_level(3)
 def users():
-    if not is_authenticated() or session['user'].get('permission_level', 0) < 3:
-        return render_template('unauthorized.html')
     return render_template('admin_users.html', users=User.query.all())
 
 @app.route('/a/users/edit/<int:id>', methods=['GET', 'POST'])
+@require_level(3)
 def edit_user(id):
-    if not is_authenticated():
-        return render_template('unauthorized.html')
-
-    current_db_user = User.query.filter_by(discord_id=session['user'].get('id')).first()
-    if current_db_user is None or current_db_user.permission_level < 3:
-        return render_template('unauthorized.html')
-
     user = User.query.get_or_404(id)
 
     if request.method == 'POST':

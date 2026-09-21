@@ -5,6 +5,7 @@
 venv
 
 migrations/__pycache__/
+migraitons/versions/__pycache__/
 .ai
 
 __pycache__/
