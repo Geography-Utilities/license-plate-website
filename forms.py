@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, SelectField
-from wtforms.validators import DataRequired, Email, InputRequired, Length
+from wtforms.validators import DataRequired, Email, InputRequired, Length, Optional
 
 class AdminEditUser(FlaskForm):
     display_name = StringField('Display Name', validators=[DataRequired(), Length(max=100)])
-    email = EmailField('Email', validators=[Email(), Length(max=120)])
+    email = EmailField('Email', validators=[Optional(), Email(), Length(max=120)])
     alpca = StringField('ALPCA #', validators=[Length(max=100)])
     home_state = StringField('Home State', validators=[Length(max=100)])
     home_country = StringField('Home Country', validators=[Length(max=100)])
