@@ -135,7 +135,7 @@ def edit_user(id):
         form = AdminEditUser(request.form)
         if form.validate():
             user.display_name = form.display_name.data
-            user.email = form.email.data
+            user.email = form.email.data or None
             user.alpca = form.alpca.data
             user.home_state = form.home_state.data
             user.home_country = form.home_country.data
