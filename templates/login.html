@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Log In{% endblock %}
+
+{% block content %}
+<div class="login-container">
+  <h1>Log In</h1>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="flash-messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="{{ url_for('login_password') }}" class="login-form">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" required autofocus>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Log In</button>
+  </form>
+
+  <div class="login-divider">
+    <span>or</span>
+  </div>
+
+  <a href="{{ url_for('login_discord') }}" class="discord-login-button">
+    Log In with Discord
+  </a>
+</div>
+{% endblock %}
