@@ -51,7 +51,10 @@
                 <p>**DEV MODE ENABLED: P{{ config.DEV_AUTH_LEVEL }}</p>
             {% endif %}
             {% if logged_in %}
-                <a href="{{ url_for('logout') }}" class="login-btn">Log Out</a>
+                <a href="{{ url_for('logout') }}" class="login-btn account-btn">
+                    <span>{{ display_name or 'Account' }}</span>
+                    <span class="account-action">Log out</span>
+                </a>
             {% else %}
                 <p><a href="{{ url_for('login') }}" class="login-btn">
                     Log in
