@@ -1,20 +1,34 @@
 import os
 from authlib.integrations.flask_client import OAuth
-from flask import Flask, session, redirect, url_for, render_template, abort, request
+from flask import Flask, session, redirect, url_for, render_template, request, flash, abort
 import requests
 import markdown
 from urllib.parse import urlparse, urljoin
 
 from auth import *
+from config import get_config, load_dev_auth_level
+from database import init_db
+from forms import *
 
-app = Flask(__name__)
-app.secret_key = os.environ["FLASK_SECRET_KEY"]
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(get_config())
+    app.config["DEV_AUTH_LEVEL"] = load_dev_auth_level()
+    if app.config["DEV_AUTH_LEVEL"] is not None:
+        app.logger.warning("DEV AUTH OVERRIDE ACTIVE: all clients are level %s",
+                           app.config["DEV_AUTH_LEVEL"])
+    app.config["AUTH_OVERRIDE_ACTIVE"] = app.config["DEV_AUTH_LEVEL"] is not None
+    init_db(app)
+    import models  # noqa: F401
+    return app
+
+app = create_app()
 
 oauth = OAuth(app)
 discord = oauth.register(
     name='discord',
-    client_id=os.environ["DISCORD_CLIENT_ID"],
-    client_secret=os.environ["DISCORD_CLIENT_SECRET"],
+    client_id=os.environ.get("DISCORD_CLIENT_ID"),
+    client_secret=os.environ.get("DISCORD_CLIENT_SECRET"),
     access_token_url='https://discord.com/api/oauth2/token',
     authorize_url='https://discord.com/api/oauth2/authorize',
     api_base_url='https://discord.com/api/',
@@ -34,19 +48,23 @@ LOCATIONS=["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
 
 @app.context_processor
 def inject_user():
-    user = session.get('user')
+    user = current_user()
     return {
         "logged_in": is_authenticated(),
-        "username": user['username'] if user else None,
+        "display_name": user.display_name if user else None,
         "user": user,
         "site_name": "Site Name"
     }
+
+@app.context_processor
+def inject_dev_flag():
+    return {"auth_override_active": app.config["AUTH_OVERRIDE_ACTIVE"]}
 
 @app.route('/login')
 def login():
     redirect_uri = os.environ["DISCORD_REDIRECT_URI"]
     session["next_url"] = request.args.get("next", "/")
-    return discord.authorize_redirect(redirect_uri, prompt='none')
+    return discord.authorize_redirect(redirect_uri, prompt='consent')
 
 @app.route('/auth/callback')
 def auth_callback():
@@ -68,9 +86,14 @@ def auth_callback():
         YOUR_SERVER_ID = os.environ["SERVER_ID"]
         is_member = any(g['id'] == YOUR_SERVER_ID for g in guilds)
 
-    user_info['is_member'] = is_member
-    session['user'] = user_info
+    discord_id = user_info['id']
+    display_name = user_info['username']
+
+    user = discord_user_login(discord_id, display_name)
+    session["user_id"] = user.id
+    session["is_member"] = is_member
     next_url = session.pop("next_url", None)
+
     if not is_safe_url(next_url):
         next_url = url_for("index")
     return redirect(next_url)
@@ -78,24 +101,63 @@ def auth_callback():
 @app.route('/logout')
 def logout():
     session.pop('user', None)
+    session.pop('user_id', None)
+    session.pop('is_member', None)
     return redirect('/')
 
 @app.route('/')
 def index():
-    user = session.get('user')
-    username = user['username'] if user else 'Guest'
+    user = current_user()
+    display_name = user.display_name if user else 'Guest'
     logged_in = is_authenticated()
-    return render_template('index.html')
+    permissions = user.permission_level if logged_in else 0
+    return render_template(
+        'index.html',
+        user=user,
+        display_name=display_name,
+        is_member=session.get('is_member', False),
+        logged_in=logged_in,
+        user_permissions=permissions,
+    )
 
 @app.route('/todo')
+@require_level(1)
 def todo():
     if is_authenticated():
         with open('notes.md', 'r') as f:
             content = f.read()
         html = markdown.markdown(content, extensions=['fenced_code', 'tables'])
-        return render_template('markdown_page.html', content=html, logged_in=is_authenticated())
+        return render_template('markdown_page.html', content=html)
     else:
         return render_template('unauthorized.html')
+
+@app.route('/a/users')
+@require_level(3)
+def users():
+    return render_template('admin_users.html', users=User.query.all())
+
+@app.route('/a/users/edit/<int:id>', methods=['GET', 'POST'])
+@require_level(3)
+def edit_user(id):
+    user = User.query.get_or_404(id)
+
+    if request.method == 'POST':
+        form = AdminEditUser(request.form)
+        if form.validate():
+            user.display_name = form.display_name.data
+            user.email = form.email.data or None
+            user.alpca = form.alpca.data
+            user.home_state = form.home_state.data
+            user.home_country = form.home_country.data
+            user.permission_level = form.permission_level.data
+            db.session.commit()
+            flash('User updated.', 'success')
+        else:
+            flash('Please correct the errors below.', 'error')
+    else:
+        form = AdminEditUser(obj=user)
+
+    return render_template('admin_edit_user.html', user=user, form=form)
 
 
 ## This is temporary just for testing

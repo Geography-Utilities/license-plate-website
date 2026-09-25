@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Users List{% endblock %}
+
+{% block content %}
+<h1>Users</h1>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Display Name</th>
+      <th>Discord ID</th>
+      <th>Email</th>
+      <th>Permissions Level</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.display_name or "-" }}</td>
+      <td>{{ user.discord_id or "-" }}</td>
+      <td>{{ user.email or "-"}}</td>
+      <td>{{ user.permission_level }}</td>
+      <td><a href="{{ url_for('edit_user', id=user.id) }}">Edit User</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

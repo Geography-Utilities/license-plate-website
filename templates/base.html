@@ -47,6 +47,9 @@
             <!-- other page links go here -->
         </div>
         <div class="nav-right">
+            {% if auth_override_active %}
+                <p>**DEV MODE ENABLED: P{{ config.DEV_AUTH_LEVEL }}</p>
+            {% endif %}
             {% if logged_in %}
                 <a href="{{ url_for('logout') }}" class="discord-login-btn">Log Out</a>
             {% else %}

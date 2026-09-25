@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Edit {{ user.display_name }}{% endblock %}
+
+{% block content %}
+  <h1>Edit User{% if user %}: {{ user.display_name }}{% endif %}</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    {{ form.csrf_token }}
+
+    <div class="field">
+      {{ form.display_name.label }}
+      {{ form.display_name(class="form-control") }}
+      {% for error in form.display_name.errors %}
+        <span class="error">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="field">
+      {{ form.email.label }}
+      {{ form.email(class="form-control") }}
+      {% for error in form.email.errors %}
+        <span class="error">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="field">
+      {{ form.alpca.label }}
+      {{ form.alpca(class="form-control") }}
+      {% for error in form.alpca.errors %}
+        <span class="error">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="field">
+      {{ form.home_state.label }}
+      {{ form.home_state(class="form-control") }}
+      {% for error in form.home_state.errors %}
+        <span class="error">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="field">
+      {{ form.home_country.label }}
+      {{ form.home_country(class="form-control") }}
+      {% for error in form.home_country.errors %}
+        <span class="error">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="field">
+      {{ form.permission_level.label }}
+      {{ form.permission_level(class="form-control") }}
+      {% for error in form.permission_level.errors %}
+        <span class="error">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <button type="submit">Save</button>
+  </form>
+{% endblock %}

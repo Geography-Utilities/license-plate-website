@@ -4,6 +4,8 @@
 .venv
 venv
 
+migrations/__pycache__/
+migrations/versions/__pycache__/
 .ai
 
 __pycache__/
