@@ -54,6 +54,22 @@ main {
     width: 60px;
 }
 
+.login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--pico-secondary-background);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-btn:hover {
+    background-color: var(--pico-secondary-hover-background)
+}
+
 @font-face {
         font-family: 'discord';
         src: url('fonts/discord.woff2') format('woff2');

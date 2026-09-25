@@ -13,6 +13,11 @@ def current_user():
 def is_authenticated():
     return current_user() is not None
 
+def establish_authenticated_session(user_id, **values):
+    session.clear()
+    session["user_id"] = user_id
+    session.update(values)
+
 def discord_user_login(discord_id, display_name):
     user = User.query.filter_by(discord_id=discord_id).first()
     if user is None:
@@ -43,3 +48,6 @@ def require_level(minimum):
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+def get_user_by_displayname(username:str):
+    return User.query.filter_by(display_name=username).first()
