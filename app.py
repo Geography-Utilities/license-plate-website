@@ -55,7 +55,7 @@ def inject_user():
 def login():
     redirect_uri = os.environ["DISCORD_REDIRECT_URI"]
     session["next_url"] = request.args.get("next", "/")
-    return discord.authorize_redirect(redirect_uri, prompt='none')
+    return discord.authorize_redirect(redirect_uri, prompt='consent')
 
 @app.route('/auth/callback')
 def auth_callback():
