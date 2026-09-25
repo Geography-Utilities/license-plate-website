@@ -245,6 +245,15 @@ def edit_user(id):
     return render_template('admin_edit_user.html', user=user, form=form)
 
 
+@app.route('/locations')
+def locations():
+    return render_template(
+        'locations.html',
+        locations=LOCATIONS,
+        location_hierarchy=None,
+    )
+
+
 ## This is temporary just for testing
 ## It needs to be updated to use the proper location designations (likely LEVEL2_LOCATION) rather than just location since we'll have formatted hierarchical categories.
 @app.route("/<location>")

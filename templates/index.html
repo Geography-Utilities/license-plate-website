@@ -4,50 +4,121 @@
 
 {% block head %}
 <style>
-    body {
-        font-family: sans-serif;
+    .home-shell {
+        width: min(100%, 980px);
+        margin: 0 auto;
+        padding: clamp(2rem, 7vw, 5.5rem) 0 clamp(2rem, 5vw, 4rem);
+    }
+
+    .home-meta {
+        padding: 1.4rem;
+        border-left: 3px solid var(--pico-primary);
+        background: color-mix(in srgb, var(--pico-primary) 8%, transparent);
+    }
+
+    .home-meta p {
         margin: 0;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
     }
 
-    main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
+    .home-meta strong {
+        display: block;
+        margin-bottom: .35rem;
+        font-size: 1.2rem;
+    }
+
+    .home-meta small {
+        color: var(--pico-muted-color);
+    }
+
+    .home-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1.25rem;
+        padding-top: 2rem;
+    }
+
+    .home-panel {
+        margin: 0;
+        padding: clamp(1.25rem, 3vw, 2rem);
+        border: 1px solid var(--pico-muted-border-color);
+        border-radius: 8px;
+        box-shadow: 0 12px 30px rgb(0 0 0 / 5%);
+    }
+
+    .home-panel h2 {
+        margin-top: 0;
+        font-size: 1.15rem;
+    }
+
+    .permission {
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        text-align: center;
+        gap: .5rem;
+        margin: .25rem 0 1rem;
+        color: var(--pico-primary);
+        font-size: 1.5rem;
+        font-weight: 700;
     }
 
-    .outline {
-        outline: #333333 solid 2px;
-        display: inline-block;
-        margin-bottom: 15px;
-        padding: 5px;
-        justify-content: left;
+    .permission::before {
+        width: .6rem;
+        height: .6rem;
+        border-radius: 50%;
+        background: currentColor;
+        content: "";
+    }
+
+    .home-panel p:last-child {
+        margin-bottom: 0;
+    }
+
+    .old-home {
+        margin: 1.5rem 0 0;
+        color: var(--pico-muted-color);
+        font-size: .82rem;
+        text-align: right;
+    }
+
+    @media (max-width: 700px) {
+        .home-hero,
+        .home-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .home-hero h1 {
+            max-width: 12ch;
+        }
+
+        .old-home {
+            text-align: left;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="centered_box">
-    <h1>Welcome, {{ display_name }}!</h1>
+<div class="home-shell">
+    <h2>License Plate Tracker is Under Development</h2>
+    <section class="home-grid" aria-label="Your access">
+        <article class="home-panel">
+            <h2>Current access</h2>
+            {% if logged_in %}
+                <div class="permission">{% if user_permissions == 0 %}Read-only{% elif user_permissions == 1 %}Submit{% elif user_permissions == 2 %}Moderate{% elif user_permissions == 3 %}Super-user{% else %}Unknown{% endif %}</div>
+                <p>Your current permissions determine which functionality is available to you.</p>
+                {% if user_permissions > 1 %}<p><a href="/todo" role="button">View project to-dos</a></p>{% endif %}
+            {% else %}
+                <div class="permission">Guest</div>
+                <p>Please log in to see your permissions. Discord is recommended but not required at this time.</p>
+            {% endif %}
+        </article>
 
-    <p style="font-size:6pt;">See old homepage: <a href="/static/temporary_index.html">link</a></p>
+        <article class="home-panel">
+            <h2>Locations</h2>
+            <p>Locations and features are continuously being added as the site develops.</p>
+            <p><a href="{{ url_for('locations') }}">Current Locations</a></p>
+        </article>
+    </section>
 
-    {% if is_member %}
-        <p>If you are seeing this message, you have the below permissions during development. For more information, contact <i>mrpenguin424</i> via Discord.<br>Click <a href="/todo">here</a> to see a list of to-dos pulled from Discord.</p>
-        <p>Your current permissions level is: {% if user_permissions == 0 %}Read-only{% elif user_permissions == 1 %}Submit{% elif user_permissions == 2 %}Moderate{% elif user_permissions == 3 %}Super-user{% else %}Unknown{% endif %}</p>
-    {% else %}
-        <p>Please log in to see permissions. Discord is required at this time.</p>
-    {% endif %}
-
-    {% if logged_in %}
-
-    {% else %}
-
-    {% endif %}
+    <p class="old-home">See old homepage: <a href="/static/temporary_index.html">link</a></p>
 </div>
 {% endblock %}
