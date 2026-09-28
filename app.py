@@ -4,6 +4,7 @@ from flask import Flask, session, redirect, url_for, render_template, request, f
 import requests
 import markdown
 from urllib.parse import urlparse, urljoin
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 load_dotenv()
@@ -163,16 +164,53 @@ def edit_user(id):
     return render_template('admin_edit_user.html', user=user, form=form)
 
 
-## This is temporary just for testing
-## It needs to be updated to use the proper location designations (likely LEVEL2_LOCATION) rather than just location since we'll have formatted hierarchical categories.
-@app.route("/<location>")
-def location_page(location):
-    logged_in = is_authenticated()
-    location=location.title()
-    if location not in LOCATIONS:
-        abort(404)
-    location = location.replace("-", " ")
-    return render_template("location.html", location=location)
+@app.route("/locations")
+def locations():
+    continents = Continent.query.order_by(Continent.name).all()
+    location_groups = []
+    for continent in continents:
+        continent.countries.sort(key=lambda country: country.name.lower())
+        countries = []
+        for country in continent.countries:
+            country.regions.sort(key=lambda region: region.name.lower())
+            countries.append({
+                "name": country.name,
+                "regions": [
+                    {
+                        "name": region.name,
+                        "url": url_for(
+                            "location_page",
+                            country=country.name,
+                            region=region.name,
+                        ),
+                    }
+                    for region in country.regions
+                ],
+            })
+        location_groups.append({"name": continent.name, "countries": countries})
+    return render_template("list_locations.html", continents=location_groups)
+
+
+@app.route("/locations/<country>/<region>")
+def location_page(country, region):
+    country_name = country.replace("-", " ")
+    region_name = region.replace("-", " ")
+    location = (Region.query.join(Country)
+        .filter(
+            func.lower(Country.name) == country_name.lower(),
+            func.lower(Region.name) == region_name.lower(),
+        )
+        .first_or_404()
+    )
+    plates_by_category = {}
+    plates = (Plates.query.filter_by(region=location.id)
+        .order_by(Plates.category, Plates.name)
+        .all()
+    )
+    for plate in plates:
+        plates_by_category.setdefault(plate.category, []).append(plate)
+
+    return render_template("location.html", location=location.name, country=location.country.name, plates_by_category=plates_by_category)
 
 
 @app.route("/plates/<id>/submit", methods=['GET', 'POST'])
@@ -214,11 +252,11 @@ def add_plate():
             form.name.errors.append("This plate already exists for that region and category.")
         else:
             flash(f"Added plate “{plate.name}”.", "success")
-            return redirect(url_for("plates.add_plate"))
+            return redirect(url_for("add_plate"))
 
     return render_template("add_plate.html", form=form)
 
-@app.route("/location/<location_type>/add", methods=['GET', 'POST'])
+@app.route("/locations/<location_type>/add", methods=['GET', 'POST'])
 @require_level(2)
 def add_location(location_type):
     form_classes = {

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Locations{% endblock %}
+
+{% block content %}
+<h1>Locations</h1>
+
+{% for continent in continents %}
+	<section>
+		<h2>{{ continent.name }}</h2>
+		{% if continent.countries %}
+			{% for country in continent.countries %}
+				<h3>{{ country.name }}</h3>
+				{% if country.regions %}
+					<ul>
+						{% for region in country.regions %}
+							<li>
+									<a href="{{ region.url }}">
+										{{ region.name }}
+								</a>
+							</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p>No regions have been added.</p>
+				{% endif %}
+			{% endfor %}
+		{% else %}
+			<p>No countries have been added.</p>
+		{% endif %}
+	</section>
+{% else %}
+	<p>No locations have been added.</p>
+{% endfor %}
+
+{% endblock %}

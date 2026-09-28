@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}My Site{% endblock %}</title>
+    <title>{% block title %}DEFAULT TITLE{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='pico.cyan.min.css') }}">
     {% block head %}{% endblock %}
@@ -67,7 +67,7 @@
           <span class="dev-notice-icon"></span>
           <div class="dev-notice-text">
             <strong>Under Development</strong>
-            <p>This site is currently in development. Running branch <b>main</b>.</p>
+            <p>This site is currently in development. Running branch <b>feat/submitting</b>.</p>
           </div>
         </div>
         {% block content %}{% endblock %}

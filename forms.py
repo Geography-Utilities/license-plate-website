@@ -44,7 +44,7 @@ class SubmitPermanentCounty(FlaskForm):
 
 
 class PlateForm(FlaskForm):
-    name = StringField("Plate name", validators=[DataRequired(), Length(max=20)])
+    name = StringField("Plate name", validators=[DataRequired(), Length(max=80)])
     region = SelectField("Region", coerce=int, validators=[DataRequired()])
     category = StringField("Category", validators=[DataRequired(), Length(max=100)])
     notes = TextAreaField("Notes", validators=[Optional(), Length(max=500)])
