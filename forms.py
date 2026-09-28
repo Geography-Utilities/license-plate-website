@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, SelectField, DateField
+from wtforms import StringField, EmailField, SelectField, DateField, TextAreaField
 from wtforms.validators import DataRequired, Email, InputRequired, Length, Optional
 from datetime import date
 
@@ -31,6 +31,7 @@ class SubmitTemporary(FlaskForm):
     date = DateField('Date', validators=[DataRequired()], default=date.today)
     expiration_date = DateField('Expiration Date')
     location = StringField('Location', validators=[Length(max=100)])
+    notes = StringField('Notes', validators=[Length(max=500)])
 
 
 class SubmitPermanentCounty(FlaskForm):
@@ -40,3 +41,29 @@ class SubmitPermanentCounty(FlaskForm):
     type = StringField('Specialty', validators=[Length(max=100)])
     location = StringField('Location', validators=[Length(max=100)])
     notes = StringField('Notes', validators=[Length(max=500)])
+
+
+class PlateForm(FlaskForm):
+    name = StringField("Plate name", validators=[DataRequired(), Length(max=20)])
+    region = SelectField("Region", coerce=int, validators=[DataRequired()])
+    category = StringField("Category", validators=[DataRequired(), Length(max=100)])
+    notes = TextAreaField("Notes", validators=[Optional(), Length(max=500)])
+
+
+class ContinentForm(FlaskForm):
+    name = StringField("Continent name", validators=[DataRequired(), Length(max=100)])
+
+
+class CountryForm(FlaskForm):
+    name = StringField("Country name", validators=[DataRequired(), Length(max=100)])
+    continent = SelectField("Continent", coerce=int, validators=[DataRequired()])
+
+
+class RegionForm(FlaskForm):
+    name = StringField("Region name", validators=[DataRequired(), Length(max=100)])
+    country = SelectField("Country", coerce=int, validators=[DataRequired()])
+
+
+class SubRegionForm(FlaskForm):
+    name = StringField("Subregion name", validators=[DataRequired(), Length(max=100)])
+    region = SelectField("Region", coerce=int, validators=[DataRequired()])

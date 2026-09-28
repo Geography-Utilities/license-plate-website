@@ -4,12 +4,14 @@ from flask import Flask, session, redirect, url_for, render_template, request, f
 import requests
 import markdown
 from urllib.parse import urlparse, urljoin
+from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 load_dotenv()
 from auth import *
 from config import get_config, load_dev_auth_level
-from database import init_db
+from database import db, init_db
 from forms import *
+from models import Continent, Country, Plates, Region, SubRegion
 
 def create_app():
     app = Flask(__name__)
@@ -172,13 +174,106 @@ def location_page(location):
     location = location.replace("-", " ")
     return render_template("location.html", location=location)
 
-@app.route("/plate/<id>/submit", methods=['GET', 'POST'])
+
+@app.route("/plates/<id>/submit", methods=['GET', 'POST'])
+@require_level(1)
 def submit_to_location(id):
     if request.method == 'POST':
         # Handle the form submission
         pass
 
-    # temporarily only use standard permanentform
+    # temporarily only use standard permanent form
     form = SubmitPermanent()
     
     return render_template("submit_to_location.html", id=id, form=form)
+
+
+@app.route("/plates/type/add", methods=['GET', 'POST'])
+@require_level(2)
+def add_plate():
+    form = PlateForm()
+
+    # Choices are loaded per request, so every node sees the current DB state
+    form.region.choices = [
+        (r.id, f"{r.country.name} - {r.name}")
+        for r in Region.query.join(Country).order_by(Country.name, Region.name)
+    ]
+
+    if form.validate_on_submit():
+        plate = Plates(
+            name=form.name.data.strip(),
+            region=form.region.data,
+            category=form.category.data.strip(),
+            notes=(form.notes.data or "").strip() or None,
+        )
+        db.session.add(plate)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            form.name.errors.append("This plate already exists for that region and category.")
+        else:
+            flash(f"Added plate “{plate.name}”.", "success")
+            return redirect(url_for("plates.add_plate"))
+
+    return render_template("add_plate.html", form=form)
+
+@app.route("/location/<location_type>/add", methods=['GET', 'POST'])
+@require_level(2)
+def add_location(location_type):
+    form_classes = {
+        "continent": (ContinentForm, Continent, None, "continent"),
+        "country": (CountryForm, Country, "continent", "country"),
+        "region": (RegionForm, Region, "country", "region"),
+        "subregion": (SubRegionForm, SubRegion, "region", "subregion"),
+    }
+
+    if location_type not in form_classes:
+        abort(404)
+
+    form_class, model_class, parent_name, display_name = form_classes[location_type]
+    form = form_class()
+    parent_field = getattr(form, parent_name) if parent_name else None
+
+    if location_type == "country":
+        parent_field.choices = [
+            (continent.id, continent.name)
+            for continent in Continent.query.order_by(Continent.name)
+        ]
+    elif location_type == "region":
+        parent_field.choices = [
+            (country.id, country.name)
+            for country in Country.query.order_by(Country.name)
+        ]
+    elif location_type == "subregion":
+        parent_field.choices = [
+            (region.id, f"{region.country.name} - {region.name}")
+            for region in Region.query.join(Country).order_by(Country.name, Region.name)
+        ]
+
+    if form.validate_on_submit():
+        values = {"name": form.name.data.strip()}
+        if parent_name:
+            values[f"{parent_name}_id"] = parent_field.data
+
+        location = model_class(**values)
+        db.session.add(location)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            form.name.errors.append(
+                f"This {display_name} already exists for the selected parent."
+                if parent_name
+                else f"This {display_name} already exists."
+            )
+        else:
+            flash(f"Added {display_name} “{location.name}”.", "success")
+            return redirect(url_for("add_location", location_type=location_type))
+
+    return render_template(
+        "add_location.html",
+        form=form,
+        location_type=display_name,
+        parent_field=parent_field,
+    )

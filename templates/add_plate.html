@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Add plate</h1>
+<form method="post" novalidate>
+  {{ form.hidden_tag() }}
+  {% for field in [form.name, form.region, form.category, form.notes] %}
+    <p>{{ field.label }} {{ field() }}
+      {% for e in field.errors %}<span class="error">{{ e }}</span>{% endfor %}</p>
+  {% endfor %}
+  <button type="submit">Save</button>
+</form>
+{% endblock %}

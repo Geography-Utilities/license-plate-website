@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Add {{ location_type|title }}{% endblock %}
+
+{% block content %}
+  <h1>Add {{ location_type|title }}</h1>
+
+  <form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="field">
+      {{ form.name.label }}
+      {{ form.name(class="form-control") }}
+      {% for error in form.name.errors %}
+        <span class="error">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    {% if parent_field %}
+      <div class="field">
+        {{ parent_field.label }}
+        {{ parent_field(class="form-control") }}
+        {% for error in parent_field.errors %}
+          <span class="error">{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <button type="submit">Add {{ location_type|title }}</button>
+  </form>
+{% endblock %}
