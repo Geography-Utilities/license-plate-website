@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Plate{% endblock %}
+
+{% block content %}
+  <h1>Submit Plate {{ id }}</h1>
+  <form method="post">
+    <div class="field"></div>
+    {{ form.csrf_token }}
+
+    {{ form.plate.label }}
+    {{ form.plate()}}
+
+    {{ form.date.label }}
+    {{ form.date() }}
+
+    {{ form.type.label }}
+    {{ form.type() }}
+
+    {{ form.location.label }}
+    {{ form.location() }}
+
+    {{ form.notes.label }}
+    {{ form.notes() }}
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}

@@ -4,7 +4,8 @@ from flask import Flask, session, redirect, url_for, render_template, request, f
 import requests
 import markdown
 from urllib.parse import urlparse, urljoin
-
+from dotenv import load_dotenv
+load_dotenv()
 from auth import *
 from config import get_config, load_dev_auth_level
 from database import init_db
@@ -170,3 +171,14 @@ def location_page(location):
         abort(404)
     location = location.replace("-", " ")
     return render_template("location.html", location=location)
+
+@app.route("/plate/<id>/submit", methods=['GET', 'POST'])
+def submit_to_location(id):
+    if request.method == 'POST':
+        # Handle the form submission
+        pass
+
+    # temporarily only use standard permanentform
+    form = SubmitPermanent()
+    
+    return render_template("submit_to_location.html", id=id, form=form)
