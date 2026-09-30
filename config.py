@@ -21,14 +21,6 @@ class ProductionConfig(Config):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
 
-def load_dev_auth_level():
-    raw = os.environ.get("DEV_AUTH_LEVEL")
-    if not raw:
-        return None
-    if os.environ.get("FLASK_ENV") != "development":
-        raise RuntimeError("DEV_AUTH_LEVEL set outside development. Refusing to start.")
-    return int(raw)   # a ValueError here also fails at boot, not per request
-
 def get_config():
     env = os.environ.get("FLASK_ENV", "development")
     if env == "development":

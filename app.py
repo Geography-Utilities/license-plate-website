@@ -10,7 +10,7 @@ from urllib.parse import urlparse, urljoin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from auth import *
-from config import get_config, load_dev_auth_level
+from config import get_config
 from database import init_db
 from forms import *
 from models import User
@@ -31,11 +31,6 @@ def create_app():
         raise RuntimeError("RATELIMIT_STORAGE_URI is required in production")
     csrf.init_app(app)
     limiter.init_app(app)
-    app.config["DEV_AUTH_LEVEL"] = load_dev_auth_level()
-    if app.config["DEV_AUTH_LEVEL"] is not None:
-        app.logger.warning("DEV AUTH OVERRIDE ACTIVE: all clients are level %s",
-                           app.config["DEV_AUTH_LEVEL"])
-    app.config["AUTH_OVERRIDE_ACTIVE"] = app.config["DEV_AUTH_LEVEL"] is not None
     init_db(app)
     import models  # noqa: F401
     return app
@@ -73,11 +68,6 @@ def inject_user():
         "user": user,
         "site_name": "Site Name"
     }
-
-@app.context_processor
-def inject_dev_flag():
-    return {"auth_override_active": app.config["AUTH_OVERRIDE_ACTIVE"]}
-
 
 @app.route('/')
 def index():

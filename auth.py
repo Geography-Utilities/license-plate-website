@@ -27,10 +27,6 @@ def discord_user_login(discord_id, display_name):
     return user
 
 def get_permission_level():
-    override = current_app.config.get("DEV_AUTH_LEVEL")
-    if override is not None:
-        return override
-
     uid = session.get("user_id")
     if uid is None:
         return 0
