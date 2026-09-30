@@ -76,13 +76,52 @@ hosts, that requires deliberate `listen_addresses` / `pg_hba.conf` /
 firewall changes plus `sslmode=require` on connections — not the default
 setup.
 
-## 3. Application dependencies
+## 3. Install Redis for rate limiting
+
+Install Debian's Redis server package and enable the service:
+
+```bash
+sudo apt update
+sudo apt install redis-server
+sudo systemctl enable --now redis-server
+```
+
+Keep Redis private because it contains rate-limit state and must not be
+reachable from the public internet. Edit `/etc/redis/redis.conf` and verify
+these settings:
+
+```conf
+bind 127.0.0.1 ::1
+protected-mode yes
+```
+
+For an additional authentication boundary, set a long random password in the
+same file:
+
+```conf
+requirepass <long-random-redis-password>
+```
+
+Restart Redis and verify it locally. `redis-cli --askpass` prompts without
+putting the password in the shell command history:
+
+```bash
+sudo systemctl restart redis-server
+redis-cli --askpass ping
+```
+
+The expected response is `PONG`. Do not open port 6379 in the firewall or
+configure Redis to bind to a public interface. Redis persistence and backups
+are not required for rate-limit correctness; losing Redis state only resets
+the current counters.
+
+## 4. Application dependencies
 
 ```bash
 pip install Flask Flask-SQLAlchemy Flask-Migrate psycopg2-binary python-dotenv
 ```
 
-## 4. Environment configuration
+## 5. Environment configuration
 
 Production environment variables live in:
 
@@ -95,6 +134,16 @@ Required variables:
 ```
 FLASK_ENV=production
 DATABASE_URL=postgresql://plates_app:<real-password>@localhost:5432/plates_db
+RATELIMIT_STORAGE_URI=redis://localhost:6379/0
+```
+
+`RATELIMIT_STORAGE_URI` must point to shared Redis storage in production so
+rate limits apply consistently across all Gunicorn workers and hosts.
+If Redis authentication is enabled, use the password in the URI and URL-encode
+any special characters:
+
+```
+RATELIMIT_STORAGE_URI=redis://:<redis-password>@localhost:6379/0
 ```
 
 Do **not** wrap values in quotes in this file, and do not use a literal
@@ -125,7 +174,7 @@ sudo systemctl daemon-reload
 sudo systemctl restart plates-gunicorn
 ```
 
-## 5. Running `flask db` commands manually (SSH)
+## 6. Running `flask db` commands manually (SSH)
 
 `EnvironmentFile=` only applies to the systemd-managed gunicorn process —
 it does **not** carry over to an interactive SSH shell. Running `flask db
@@ -154,7 +203,7 @@ testing — Flask's CLI auto-loads a `.env` from the current working
 directory, which can silently override the intended
 `/etc/licenseplates/.env` values if one exists.
 
-## 6. First-time migration setup
+## 7. First-time migration setup
 
 ```bash
 set -a
@@ -175,7 +224,7 @@ flask db heads      # shows the latest revision in migrations/versions/
 flask db upgrade    # applies the pending migration
 ```
 
-## 7. Routine deploys
+## 8. Routine deploys
 
 Migrations should run as part of the deploy process, not as a manual
 afterthought — this avoids the export/environment mismatch entirely and
@@ -204,7 +253,7 @@ sudo systemctl restart plates-gunicorn
 fails (e.g., a bad migration) instead of restarting gunicorn into a
 half-migrated database.
 
-## 8. Backups
+## 9. Backups
 
 ```bash
 pg_dump -U plates_app -h localhost -F c plates_db -f plates_backup_$(date +%F).dump

@@ -60,6 +60,42 @@ main {
     width: 60px;
 }
 
+.login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--pico-secondary-background);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.account-btn {
+    gap: 9px;
+}
+
+.account-status {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #74d69a;
+    box-shadow: 0 0 0 3px rgb(116 214 154 / 18%);
+}
+
+.account-action {
+    padding-left: 9px;
+    border-left: 1px solid rgb(255 255 255 / 28%);
+    font-size: .8rem;
+    font-weight: 500;
+    opacity: .78;
+}
+
+.login-btn:hover {
+    background-color: var(--pico-secondary-hover-background)
+}
+
 @font-face {
         font-family: 'discord';
         src: url('fonts/discord.woff2') format('woff2');

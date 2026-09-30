@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Locations | License Plate Highs Tracker{% endblock %}
+
+{% block head %}
+<style>
+    .locations-shell {
+        width: 100%;
+        margin: 0;
+        padding: clamp(2rem, 6vw, 4.5rem) 0;
+    }
+
+    .locations-heading {
+        max-width: 900px;
+        margin-bottom: 3rem;
+    }
+
+    .locations-heading h1 {
+        margin: 0 0 1rem;
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        letter-spacing: -.04em;
+    }
+
+    .locations-heading p {
+        margin: 0;
+        color: var(--pico-muted-color);
+        font-size: 1.08rem;
+        line-height: 1.7;
+    }
+
+    .location-tree {
+        display: grid;
+        gap: 2.5rem;
+    }
+
+    .location-level {
+        margin: 0;
+        padding: clamp(1.25rem, 3vw, 2rem);
+        border: 1px solid var(--pico-muted-border-color);
+        border-radius: 8px;
+        box-shadow: 0 12px 30px rgb(0 0 0 / 5%);
+    }
+
+    .location-level[data-level="continent"] {
+        border-top: 2px solid var(--pico-primary);
+    }
+
+    .location-level[data-level="country"] {
+        margin-top: 1.25rem;
+        padding-left: 1.25rem;
+        border-left: 2px solid var(--pico-muted-border-color);
+        box-shadow: none;
+    }
+
+    .location-level[data-level="region"] {
+        margin-top: 1rem;
+        padding: 1.25rem;
+        background: color-mix(in srgb, var(--pico-primary) 5%, transparent);
+        box-shadow: none;
+    }
+
+    .location-label {
+        display: block;
+        margin-bottom: .35rem;
+        color: var(--pico-muted-color);
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    .location-level h2,
+    .location-level h3,
+    .location-level h4 {
+        margin-top: 0;
+    }
+
+    .location-level h2 {
+        margin-bottom: 1.25rem;
+    }
+
+    .location-level h3 {
+        margin-bottom: .75rem;
+        font-size: 1.25rem;
+    }
+
+    .location-level h4 {
+        margin-bottom: .65rem;
+        font-size: 1rem;
+    }
+
+    .location-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: .5rem .75rem;
+        margin: 0;
+        padding: 0;
+        list-style: none !important;
+    }
+
+    .location-list li {
+        list-style: none;
+    }
+
+    .location-list a {
+        display: block;
+        padding: .65rem .75rem;
+        border: 1px solid var(--pico-muted-border-color);
+        border-radius: 5px;
+        background: var(--pico-card-background-color);
+        text-decoration: none;
+    }
+
+    .location-list a:hover {
+        border-color: var(--pico-primary);
+    }
+
+    .locations-note {
+        margin-top: 1.5rem;
+        color: var(--pico-muted-color);
+        font-size: .9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="locations-shell">
+    <header class="locations-heading">
+        <h1>Locations</h1>
+    </header>
+
+    <div class="location-tree">
+        {% if location_hierarchy %}
+            {% for continent in location_hierarchy %}
+                <section class="location-level" data-level="continent">
+                    <span class="location-label">Continent</span>
+                    <h2>{{ continent.name }}</h2>
+
+                    {% for country in continent.countries %}
+                        <section class="location-level" data-level="country">
+                            <span class="location-label">Country</span>
+                            <h3>{{ country.name }}</h3>
+
+                            {% for region in country.regions %}
+                                <section class="location-level" data-level="region">
+                                    <span class="location-label">State / province</span>
+                                    <h4>{{ region.name }}</h4>
+                                    {% if region.slug %}
+                                        <ul class="location-list">
+                                            <li><a href="{{ url_for('location_page', location=region.slug) }}">View {{ region.name }}</a></li>
+                                        </ul>
+                                    {% endif %}
+                                </section>
+                            {% endfor %}
+                        </section>
+                    {% endfor %}
+                </section>
+            {% endfor %}
+        {% else %}
+            <section class="location-level" data-level="continent">
+                <span class="location-label">Continent</span>
+                <h2>North America</h2>
+
+                <section class="location-level" data-level="country">
+                    <span class="location-label">Country</span>
+                    <h3>United States</h3>
+                    <p class="locations-note">Current location data is shown as a flat list until the regional divisions are available.</p>
+                    <ul class="location-list">
+                        {% for location in locations %}
+                            <li><a href="{{ url_for('location_page', location=location) }}">{{ location|replace('-', ' ') }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
