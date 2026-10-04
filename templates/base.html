@@ -48,10 +48,13 @@
         </div>
         <div class="nav-right">
             {% if logged_in %}
-                <a href="{{ url_for('logout') }}" class="login-btn account-btn">
-                    <span>{{ display_name or 'Account' }}</span>
-                    <span class="account-action">Log out</span>
-                </a>
+                <form method="POST" action="{{ url_for('logout') }}" class="logout-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="login-btn account-btn">
+                        <span>{{ display_name or 'Account' }}</span>
+                        <span class="account-action">Log out</span>
+                    </button>
+                </form>
             {% else %}
                 <p><a href="{{ url_for('login') }}" class="login-btn">
                     Log in

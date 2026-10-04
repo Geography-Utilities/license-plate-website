@@ -148,7 +148,7 @@ def auth_callback():
     return redirect(next_url)
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
     session.pop('user', None)
     session.pop('user_id', None)

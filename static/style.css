@@ -70,6 +70,10 @@ main {
     gap: 9px;
 }
 
+.logout-form {
+    margin: 0;
+}
+
 .account-status {
     width: 7px;
     height: 7px;
