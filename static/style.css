@@ -30,6 +30,12 @@ header, footer {
     flex-shrink: 0;
 }
 
+footer img {
+   padding-left: 30px;
+   margin-bottom: var(--pico-typography-spacing-vertical);
+}
+
+
 main {
     flex: 1;
     padding: 1vh 3vw;
