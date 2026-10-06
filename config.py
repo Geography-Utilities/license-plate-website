@@ -22,7 +22,10 @@ class ProductionConfig(Config):
     SESSION_COOKIE_SAMESITE = "Lax"
 
 def get_config():
-    env = os.environ.get("FLASK_ENV", "development")
+    env = os.environ.get("FLASK_ENV")
     if env == "development":
         print("Development Config Enabled")
-    return DevelopmentConfig if env == "development" else ProductionConfig
+        return DevelopmentConfig
+    if env == "production":
+        return ProductionConfig
+    raise RuntimeError("FLASK_ENV must be explicitly set to 'development' or 'production'")
