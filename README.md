@@ -71,6 +71,9 @@ flask run
 
 Open <http://127.0.0.1:5000> in a browser.
 
+Application URLs use resource-oriented paths: authentication is under `/auth`,
+administration under `/admin`, and location pages under `/locations`.
+
 To stop PostgreSQL when finished:
 
 ```bash
