@@ -3,8 +3,16 @@
 {% block title %}Log In{% endblock %}
 
 {% block content %}
-<div class="login-container">
+<div class="login-container login-shell">
   <h1>Log In</h1>
+
+  <div class="login-grid">
+    <div class="login-form-container">
+      <h2>Log in with your account</h2>
+    </div>
+    <div class="discord-login-container">
+      <h2>Log in with Discord</h2>
+    </div>
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -35,11 +43,10 @@
     Log in
   </a>
 
-    <div class="signup">
-      <p>No account? <a href="{{ url_for('signup') }}">Sign up here.</a></p>
-    </div>
-    <div class="forgot_password">
-      <p></p>
+    <div class="login-options">
+      <a id="reset-password" href="{{ url_for('login') }}#reset-password">Reset password</a>
+      <span aria-hidden="true">|</span>
+      <span>No account? <a href="{{ url_for('signup') }}">Sign up here.</a></span>
     </div>
   </div>
 {% endblock %}
