@@ -254,3 +254,8 @@ def location_page(location):
         abort(404)
     location = location.replace("-", " ")
     return render_template("location.html", location=location)
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html'), 404
