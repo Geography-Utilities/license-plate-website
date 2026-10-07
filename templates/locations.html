@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Locations | License Plate Highs Tracker{% endblock %}
+
+{% block content %}
+<div class="locations-shell">
+    <header class="locations-heading">
+        <h1>Locations</h1>
+    </header>
+
+    <div class="location-tree">
+        {% if location_hierarchy %}
+            {% for continent in location_hierarchy %}
+                <section class="location-level" data-level="continent">
+                    <span class="location-label">Continent</span>
+                    <h2>{{ continent.name }}</h2>
+
+                    {% for country in continent.countries %}
+                        <section class="location-level" data-level="country">
+                            <span class="location-label">Country</span>
+                            <h3>{{ country.name }}</h3>
+
+                            {% for region in country.regions %}
+                                <section class="location-level" data-level="region">
+                                    <span class="location-label">State / province</span>
+                                    <h4>{{ region.name }}</h4>
+                                    {% if region.slug %}
+                                        <ul class="location-list">
+                                            <li><a href="{{ url_for('location_page', location=region.slug) }}">View {{ region.name }}</a></li>
+                                        </ul>
+                                    {% endif %}
+                                </section>
+                            {% endfor %}
+                        </section>
+                    {% endfor %}
+                </section>
+            {% endfor %}
+        {% else %}
+            <section class="location-level" data-level="continent">
+                <span class="location-label">Continent</span>
+                <h2>North America</h2>
+
+                <section class="location-level" data-level="country">
+                    <span class="location-label">Country</span>
+                    <h3>United States</h3>
+                    <p class="locations-note">Current location data is shown as a flat list until the regional divisions are available.</p>
+                    <ul class="location-list">
+                        {% for location in locations %}
+                            <li><a href="{{ url_for('location_page', location=location) }}">{{ location|replace('-', ' ') }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
