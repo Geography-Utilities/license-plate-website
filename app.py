@@ -84,20 +84,20 @@ def index():
         user_permissions=permissions,
     )
 
-@app.route('/login')
+@app.route('/auth/login')
 def login():
     session["next_url"] = request.args.get("next", "/")
     return render_template("login.html")
 
 
-@app.route('/login/discord')
+@app.route('/auth/login/discord')
 def login_discord():
     redirect_uri = os.environ.get('DISCORD_REDIRECT_URI')
     session["next_url"] = request.args.get("next", session.get("next_url", "/"))
     return discord.authorize_redirect(redirect_uri)
 
 
-@app.route('/login/password', methods=['POST'])
+@app.route('/auth/login/password', methods=['POST'])
 @limiter.limit("60 per minute")
 @limiter.limit("10 per minute", key_func=auth_rate_limit_key)
 def login_password():
@@ -148,15 +148,15 @@ def auth_callback():
     return redirect(next_url)
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/auth/logout', methods=['POST'])
 def logout():
     session.pop('user', None)
     session.pop('user_id', None)
     session.pop('is_member', None)
-    return redirect('/')
+    return redirect(url_for('index'))
 
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/auth/signup', methods=['GET', 'POST'])
 @limiter.limit("3 per hour", methods=["POST"])
 def signup():
     if request.method == 'GET':
@@ -195,7 +195,7 @@ def signup():
     return redirect(url_for('index'))
 
 
-@app.route('/todo')
+@app.route('/todos')
 @require_level(1)
 def todo():
     if is_authenticated():
@@ -206,12 +206,12 @@ def todo():
     else:
         return render_template('unauthorized.html')
 
-@app.route('/a/users')
+@app.route('/admin/users')
 @require_level(3)
 def users():
     return render_template('admin_users.html', users=User.query.all())
 
-@app.route('/a/users/edit/<int:id>', methods=['GET', 'POST'])
+@app.route('/admin/users/<int:id>/edit', methods=['GET', 'POST'])
 @require_level(3)
 def edit_user(id):
     user = User.query.get_or_404(id)
@@ -246,7 +246,7 @@ def locations():
 
 ## This is temporary just for testing
 ## It needs to be updated to use the proper location designations (likely LEVEL2_LOCATION) rather than just location since we'll have formatted hierarchical categories.
-@app.route("/<location>")
+@app.route("/locations/<location>")
 def location_page(location):
     logged_in = is_authenticated()
     location=location.title()
@@ -254,6 +254,53 @@ def location_page(location):
         abort(404)
     location = location.replace("-", " ")
     return render_template("location.html", location=location)
+
+
+@app.route('/login')
+def legacy_login():
+    return redirect(url_for('login', **request.args), code=308)
+
+
+@app.route('/login/discord')
+def legacy_login_discord():
+    return redirect(url_for('login_discord', **request.args), code=308)
+
+
+@app.route('/login/password', methods=['POST'])
+def legacy_login_password():
+    return redirect(url_for('login_password'), code=308)
+
+
+@app.route('/logout', methods=['POST'])
+def legacy_logout():
+    return redirect(url_for('logout'), code=308)
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def legacy_signup():
+    return redirect(url_for('signup', **request.args), code=308)
+
+
+@app.route('/todo')
+def legacy_todo():
+    return redirect(url_for('todo'), code=308)
+
+
+@app.route('/a/users')
+def legacy_users():
+    return redirect(url_for('users'), code=308)
+
+
+@app.route('/a/users/edit/<int:id>', methods=['GET', 'POST'])
+def legacy_edit_user(id):
+    return redirect(url_for('edit_user', id=id), code=308)
+
+
+@app.route('/<location>')
+def legacy_location(location):
+    if location.title() not in LOCATIONS:
+        abort(404)
+    return redirect(url_for('location_page', location=location), code=308)
 
 
 @app.errorhandler(404)

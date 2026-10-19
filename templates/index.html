@@ -11,7 +11,7 @@
             {% if logged_in %}
                 <div class="permission">{% if user_permissions == 0 %}Read-only{% elif user_permissions == 1 %}Submit{% elif user_permissions == 2 %}Moderate{% elif user_permissions == 3 %}Super-user{% else %}Unknown{% endif %}</div>
                 <p>Your current permissions determine which functionality is available to you.</p>
-                {% if user_permissions > 1 %}<p><a href="/todo" role="button">View project to-dos</a></p>{% endif %}
+                {% if user_permissions > 1 %}<p><a href="{{ url_for('todo') }}" role="button">View project to-dos</a></p>{% endif %}
             {% else %}
                 <div class="permission">Guest</div>
                 <p>Please log in to see your permissions. Discord is recommended but not required at this time.</p>
@@ -25,6 +25,6 @@
         </article>
     </section>
 
-    <p class="old-home">See old homepage: <a href="/static/temporary_index.html">link</a></p>
+    <p class="old-home">See old homepage: <a href="{{ url_for('static', filename='temporary_index.html') }}">link</a></p>
 </div>
 {% endblock %}
