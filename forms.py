@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, SelectField
+from wtforms import StringField, EmailField, SelectField, DateField
 from wtforms.validators import DataRequired, Email, InputRequired, Length, Optional
+from datetime import date
 
 class AdminEditUser(FlaskForm):
     display_name = StringField('Display Name', validators=[DataRequired(), Length(max=100)])
@@ -29,3 +30,13 @@ class AddLocationForm(FlaskForm):
         coerce=int,
         validators=[InputRequired()]
     );
+
+
+class PlateSubmissionForm(FlaskForm):
+    plate = StringField('Serial *', validators=[DataRequired(), Length(max=20)])
+    date = DateField('Date *', validators=[DataRequired()], default=date.today)
+    county = StringField('County', validators=[Length(max=100), Optional()])
+    type = StringField('Specialty', validators=[Length(max=100), Optional()]) # specialty type
+    location = StringField('Location', validators=[Length(max=100), Optional()])
+    notes = StringField('Notes', validators=[Length(max=500), Optional()])
+    expiration_date = DateField('Expiration Date', validators=[Optional()])

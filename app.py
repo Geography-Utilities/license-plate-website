@@ -1,4 +1,5 @@
 import os
+from collections import defaultdict
 from authlib.integrations.flask_client import OAuth
 from flask import Flask, session, redirect, url_for, render_template, request, flash, abort
 from flask_limiter import Limiter
@@ -13,10 +14,17 @@ from auth import *
 from config import get_config
 from database import init_db
 from forms import *
-from models import User, Location
+from models import User, Location, Plates, Submissions
 
 csrf = CSRFProtect()
 limiter = Limiter(key_func=get_remote_address, headers_enabled=True)
+
+
+def _serial_sort_key(serial):
+    try:
+        return (1, int(serial))
+    except (TypeError, ValueError):
+        return (0, serial or "")
 
 
 def auth_rate_limit_key():
@@ -239,10 +247,9 @@ def edit_user(id):
 def locations():
     user_perms = get_permission_level() or None # grab user permissions to determine whether to display "add location" button
     locations = Location.query.order_by(Location.name).filter_by(level=3).all()  # Only fetch level 3 locations (regions). this is temporary while US is the only supported country
-    location_names = [loc.name for loc in locations]
     return render_template(
         'locations.html',
-        locations=location_names,
+        locations=locations,
         location_hierarchy=None,
         user_permissions=user_perms
     )
@@ -250,13 +257,44 @@ def locations():
 
 ## This is temporary just for testing
 ## It needs to be updated to use the proper location designations (likely LEVEL2_LOCATION) rather than just location since we'll have formatted hierarchical categories.
-@app.route("/locations/<location>")
-def location_page(location):
-    location=location.title()
-    if location not in LOCATIONS:
-        abort(404)
-    location = location.replace("-", " ")
-    return render_template("location.html", location=location)
+@app.route("/locations/<code>")
+def location_page(code):
+    location = Location.query.filter_by(code=code).first_or_404()
+    plates_by_category = defaultdict(list)
+    plates = Plates.query.filter_by(region=location.id).order_by(
+        Plates.category,
+        Plates.name,
+    ).all()
+    for plate in plates:
+        plates_by_category[plate.category].append(plate)
+
+    submissions = Submissions.query.filter(
+        Submissions.plate_id.in_([plate.id for plate in plates])
+    ).all()
+    high_submissions = {}
+    for submission in submissions:
+        current_high = high_submissions.get(submission.plate_id)
+        if current_high is None or _serial_sort_key(submission.serial) > _serial_sort_key(current_high.serial):
+            high_submissions[submission.plate_id] = submission
+
+    submitter_ids = {
+        submission.submitter_id
+        for submission in high_submissions.values()
+    }
+    submitter_names = {
+        user.id: user.display_name
+        for user in User.query.filter(User.id.in_(submitter_ids)).all()
+    }
+
+    return render_template(
+        "location.html",
+        location=location,
+        plates_by_category=dict(plates_by_category),
+        high_submissions=high_submissions,
+        submitter_names=submitter_names,
+    )
+
+
 
 
 @app.route("/moderate")
@@ -292,6 +330,62 @@ def add_location():
         flash("Please correct the errors below.", "error")
 
     return render_template("add_location.html", form=form)
+
+
+@app.route("/plate")
+def plate_page():
+    id = request.args.get("id")
+    if id is None:
+        abort(404)
+
+    plate = db.get_or_404(Plates, id)
+    submissions = Submissions.query.filter_by(plate_id=plate.id).order_by(Submissions.date_submitted.desc()).all()
+    submitter_ids = {submission.submitter_id for submission in submissions}
+    submitter_names = {
+        user.id: user.display_name
+        for user in User.query.filter(User.id.in_(submitter_ids)).all()
+    }
+
+    return render_template(
+        "plate.html",
+        plate=plate,
+        submissions=submissions,
+        submitter_names=submitter_names,
+    )
+
+@app.route("/plate/submit", methods=["GET", "POST"])
+@require_level(1) # allow submitter, moderator, and admin access to submission function pages
+def submit_plate():
+    id = request.args.get("id")
+    if id is None:
+        abort(404)
+    plate = db.get_or_404(Plates, id)
+
+    if request.method == "POST":
+        form = PlateSubmissionForm(request.form)
+        if form.validate():
+            submission = Submissions(
+                serial=form.plate.data,
+                plate_id=plate.id,
+                date_submitted=date.today(),
+                date_seen=form.date.data,
+                type=form.type.data or None,
+                location=form.location.data or None,
+                expiration_date=form.expiration_date.data or None,
+                notes=form.notes.data or None,
+                submitter_id=session.get("user_id")
+            )
+            db.session.add(submission)
+            db.session.commit()
+            flash("Plate submission successful.", "success")
+            return redirect(url_for("index"))
+        else:
+            flash("Please correct the errors below.", "error")
+    else:
+        form = PlateSubmissionForm()
+
+    return render_template("submit_plate.html", plate=plate, form=form)
+
 
 # legacy routes from previous paths. these will eventually be removed.
 @app.route('/login')
@@ -336,9 +430,10 @@ def legacy_edit_user(id):
 
 @app.route('/<location>')
 def legacy_location(location):
-    if location.title() not in LOCATIONS:
-        abort(404)
-    return redirect(url_for('location_page', location=location), code=308)
+    location = Location.query.filter(
+        db.func.lower(Location.name) == location.replace("-", " ").casefold()
+    ).first_or_404()
+    return redirect(url_for('location_page', code=location.code), code=308)
 
 
 @app.errorhandler(404)

@@ -15,19 +15,45 @@ class User(db.Model):
 class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey("location.id", ondelete="RESTRICT"), nullable=True)
+    parent_id = db.Column(
+        db.Integer,
+        db.ForeignKey("location.id", ondelete="RESTRICT"),
+        nullable=True,
+    )
     code = db.Column(db.String(10), nullable=True) # ISO 3166-2 code for the location, if applicable
     level = db.Column(db.Integer, nullable=True) # 1: Continent, 2: Country, 3: Region
 
 class Plates(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-    region = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    region = db.Column(
+        db.Integer,
+        db.ForeignKey("location.id", name="fk_plates_region_location"),
+        nullable=False,
+    )
     category = db.Column(db.String(100), nullable=False)
     notes = db.Column(db.String(500), nullable=True)
 
+class CurrentHighs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    plate_id = db.Column(
+        db.Integer,
+        db.ForeignKey("plates.id", name="fk_currenthighs_plate_plates"),
+        nullable=False,
+    )
+    location = db.Column(
+        db.Integer,
+        db.ForeignKey("location.id", name="fk_currenthighs_location_location"),
+        nullable=False,
+    )
+
 class Submissions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    submitter_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id", name="fk_submissions_submitter_user"),
+        nullable=False,
+    )
     serial = db.Column(db.String(20), nullable=False)
     plate_id = db.Column(db.Integer, db.ForeignKey("plates.id"), nullable=False)
     date_submitted = db.Column(db.Date, nullable=False)

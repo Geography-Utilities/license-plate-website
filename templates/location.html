@@ -1,10 +1,68 @@
 {% extends "base.html" %}
-{% block title %}{{ location }}{% endblock %}
+
+{% block title %}{{ location.name }}{% endblock %}
 
 {% block content %}
-<h1>{{ location }}</h1>
+<div class="locations-shell">
+    <header class="locations-heading">
+        <h1>{{ location.name }}</h1>
+        {% if location.code %}
+            {# removed for now <p>{{ location.code }}</p> #}
+        {% endif %}
+    </header>
 
-{% if location == "Texas" %}
-<img src="{{ url_for('static', filename='content/' + 'dog.gif') }}" alt="side eye dog">
-{% endif %}
+    <section class="location-tree">
+        {% if plates_by_category %}
+            {% for category, plates in plates_by_category|dictsort %}
+                <section class="location-level" data-level="category">
+                    <h2>{{ category }}</h2>
+
+                    <div class="grid">
+                        {% for plate in plates %}
+                            {% set high_submission = high_submissions.get(plate.id) %}
+                            <article>
+                                <header>
+                                    <strong>{{ plate.name }}</strong>
+                                </header>
+
+                                {% if high_submission %}
+                                    <p>
+                                        Current plate high:
+                                        <strong>{{ high_submission.serial }}</strong>
+                                    </p>
+                                    <p>
+                                        Submitted by:
+                                        <strong>{{ submitter_names.get(high_submission.submitter_id, "Unknown user") }}</strong>
+                                    </p>
+                                    <a href="{{ url_for('submit_plate', id=plate.id) }}" role="button" class="outline" style="margin-right: 10px;">
+                                        Submit a new high
+                                    <a href="{{ url_for('plate_page') }}?id={{ plate.id }}" role="button" class="outline">
+                                        View plate
+                                    </a>
+                                {% else %}
+                                    <p class="locations-note">
+                                        No submissions available yet.
+                                    </p>
+                                {% endif %}
+
+                                {% if plate.notes %}
+                                    <p>{{ plate.notes }}</p>
+                                {% else %}
+                                    <p class="locations-note">No notes specified for this plate.</p>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endfor %}
+        {% else %}
+            <section class="location-level" data-level="category">
+                <h2>No plates listed yet</h2>
+                <p class="locations-note">
+                    Plates for this location will appear here once they are added.
+                </p>
+            </section>
+        {% endif %}
+    </section>
+</div>
 {% endblock %}

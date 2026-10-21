@@ -30,9 +30,9 @@
                                 <section class="location-level" data-level="region">
                                     <span class="location-label">State / province</span>
                                     <h4>{{ region.name }}</h4>
-                                    {% if region.slug %}
+                                    {% if region.id %}
                                         <ul class="location-list">
-                                            <li><a href="{{ url_for('location_page', location=region.slug) }}">View {{ region.name }}</a></li>
+                                            <li><a href="{{ url_for('location_page', code=region.code) }}">View {{ region.name }}</a></li>
                                         </ul>
                                     {% endif %}
                                 </section>
@@ -52,7 +52,7 @@
                     <p class="locations-note">The United States is the only country supported at this time.</p>
                     <ul class="location-list">
                         {% for location in locations %}
-                            <li><a href="{{ url_for('location_page', location=location) }}">{{ location|replace('-', ' ') }}</a></li>
+                            <li><a href="{{ url_for('location_page', code=location.code) }}">{{ location.name }}</a></li>
                         {% endfor %}
                     </ul>
                 </section>
