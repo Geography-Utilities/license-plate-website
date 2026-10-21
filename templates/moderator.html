@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Moderator Panel | License Plate Highs Tracker{% endblock %}
+
+{% block content %}
+<section class="container">
+    <header>
+        <h1>Administration Panel</h1>
+        <p>Manage site content and moderation tasks from one place.</p>
+    </header>
+
+    <h2>Moderation</h2>
+    <div class="grid">
+        <article>
+            <header>
+                <strong>View and Approve Submissions</strong>
+            </header>
+            <p>Create a new location and select its parent location. [WIP: not currently functional]</p>
+            <a href="{{ url_for('index') }}" role="button" class="outline"> {# change to url_for('moderate_submissions') when enabled #}
+                Edit location
+            </a>
+        </article>
+
+        <article>
+            <header>
+                <strong>Add New Location</strong>
+            </header>
+            <p>Create a new location and select its parent location. [WIP: awaiting additional country addition]</p>
+            <a href="{{ url_for('index') }}" role="button" class="outline"> 
+                Add locations
+            </a>
+        </article>
+
+        <article>
+            <header>
+                <strong>Edit a Location</strong>
+            </header>
+            <p>Edit a current location. [Currently non-functional]</p>
+            <a href="{{ url_for('index') }}" role="button" class="outline">
+                Edit location
+            </a>
+        </article>
+    </div>
+
+    {% if level >= 3 %}
+    <h2>Administration</h2>
+    <div class="grid">
+        <article>
+            <header>
+                <strong>Users</strong>
+            </header>
+            <p>View users and update their account permissions.</p>
+            <a href="{{ url_for('users') }}" role="button">
+                Manage users
+            </a>
+        </article>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

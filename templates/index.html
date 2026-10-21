@@ -11,6 +11,7 @@
             {% if logged_in %}
                 <div class="permission">{% if user_permissions == 0 %}Read-only{% elif user_permissions == 1 %}Submit{% elif user_permissions == 2 %}Moderate{% elif user_permissions == 3 %}Super-user{% else %}Unknown{% endif %}</div>
                 <p>Your current permissions determine which functionality is available to you.</p>
+                {% if user_permissions >= 2 %}<p><a href="{{ url_for('moderator_dashboard') }}", role=button>Moderator Panel</a></p>{% endif %}
                 {% if user_permissions > 1 %}<p><a href="{{ url_for('todo') }}" role="button">View project to-dos</a></p>{% endif %}
             {% else %}
                 <div class="permission">Guest</div>

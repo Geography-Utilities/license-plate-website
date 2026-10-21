@@ -13,10 +13,11 @@ class User(db.Model):
     permission_level = db.Column(db.Integer, default=0)  # 0: view-only, 1: submit, 2: moderator, 3: superuser
 
 class Location(db.Model):
-    id = db.column(db.create_all.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey("location.id", ondelete="RESTRICT"), nullable=True)
     code = db.Column(db.String(10), nullable=True) # ISO 3166-2 code for the location, if applicable
+    level = db.Column(db.Integer, nullable=True) # 1: Continent, 2: Country, 3: Region
 
 class Plates(db.Model):
     id = db.Column(db.Integer, primary_key=True)

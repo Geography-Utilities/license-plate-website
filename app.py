@@ -13,7 +13,7 @@ from auth import *
 from config import get_config
 from database import init_db
 from forms import *
-from models import User
+from models import User, Location
 
 csrf = CSRFProtect()
 limiter = Limiter(key_func=get_remote_address, headers_enabled=True)
@@ -237,10 +237,14 @@ def edit_user(id):
 
 @app.route('/locations')
 def locations():
+    user_perms = get_permission_level() or None # grab user permissions to determine whether to display "add location" button
+    locations = Location.query.order_by(Location.name).filter_by(level=3).all()  # Only fetch level 3 locations (regions). this is temporary while US is the only supported country
+    location_names = [loc.name for loc in locations]
     return render_template(
         'locations.html',
-        locations=LOCATIONS,
+        locations=location_names,
         location_hierarchy=None,
+        user_permissions=user_perms
     )
 
 
@@ -248,7 +252,6 @@ def locations():
 ## It needs to be updated to use the proper location designations (likely LEVEL2_LOCATION) rather than just location since we'll have formatted hierarchical categories.
 @app.route("/locations/<location>")
 def location_page(location):
-    logged_in = is_authenticated()
     location=location.title()
     if location not in LOCATIONS:
         abort(404)
@@ -256,6 +259,41 @@ def location_page(location):
     return render_template("location.html", location=location)
 
 
+@app.route("/moderate")
+@require_level(2) # allow moderator and admin access to moderation function pages
+def moderator_dashboard():
+    level = get_permission_level()  # grab user permissions for admin vs moderator
+    return render_template("moderator.html", level=level)
+
+
+@app.route("/moderator/locations/add", methods=["GET", "POST"])
+@require_level(3) # admin level access temporarily while US is the only supported country.
+def add_location():
+    form = AddLocationForm()
+    locations = Location.query.order_by(Location.name).all()
+    
+    form.parent_id.choices = [("", "No parent")] + [
+        (str(location.id), location.name) for location in locations
+    ]
+
+    if form.validate_on_submit():
+        new_location = Location(
+            name=form.name.data,
+            parent_id=form.parent_id.data,
+            code=form.code.data or None,
+            level=form.level.data
+        )
+        db.session.add(new_location)
+        db.session.commit()
+        flash(f"Location {form.name.data} added successfully.", "success")
+        #return redirect(url_for("locations"))
+    
+    elif request.method == "POST":
+        flash("Please correct the errors below.", "error")
+
+    return render_template("add_location.html", form=form)
+
+# legacy routes from previous paths. these will eventually be removed.
 @app.route('/login')
 def legacy_login():
     return redirect(url_for('login', **request.args), code=308)

@@ -8,6 +8,12 @@
         <h1>Locations</h1>
     </header>
 
+    {% if user_permissions >= 3 %}
+        <div class="add-location-button">
+            <a href="{{ url_for('add_location') }}" class="btn btn-primary">Add Location</a>
+        </div>
+    {% endif %}
+
     <div class="location-tree">
         {% if location_hierarchy %}
             {% for continent in location_hierarchy %}
@@ -43,7 +49,7 @@
                 <section class="location-level" data-level="country">
                     <span class="location-label">Country</span>
                     <h3>United States</h3>
-                    <p class="locations-note">Current location data is shown as a flat list until the regional divisions are available.</p>
+                    <p class="locations-note">The United States is the only country supported at this time.</p>
                     <ul class="location-list">
                         {% for location in locations %}
                             <li><a href="{{ url_for('location_page', location=location) }}">{{ location|replace('-', ' ') }}</a></li>

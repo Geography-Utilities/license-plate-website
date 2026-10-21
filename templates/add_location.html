@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Add Location | License Plate Highs Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Add Location</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+    <form method="POST" action="{{ url_for('add_location') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.code.label(class="form-label") }}
+            {{ form.code(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.parent_id.label(class="form-label") }}
+            {{ form.parent_id(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.level.label(class="form-label") }}
+            {{ form.level(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Add Location</button>
+    </form>
+
+{% endblock %}

@@ -14,3 +14,18 @@ class AdminEditUser(FlaskForm):
         coerce=int,
         validators=[InputRequired()]
     )
+
+class AddLocationForm(FlaskForm):
+    name = StringField('Location Name', validators=[DataRequired(), Length(max=100)])
+    parent_id = SelectField(
+        'Parent Location',
+        coerce=lambda value: int(value) if value else None,
+        validators=[Optional()],
+    )
+    code = StringField('ISO 3166-2 Code', validators=[Optional(), Length(max=10)])
+    level = SelectField(
+        'Location Level',
+        choices=[(1, 'Continent'), (2, 'Country'), (3, 'Region')],
+        coerce=int,
+        validators=[InputRequired()]
+    );
