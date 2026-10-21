@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ plate.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ plate.name }} Submissions</h1>
+<p>Plate highs go here once implemented</p>
+<h2>Previous Submissions</h2>
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Serial</th>
+      <th>Date Seen</th>
+      <th>Specialty</th>
+      <th>Location Spotted</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for submission in submissions %}
+    <tr>
+      <td>{{ submitter_names.get(submission.submitter_id, "Removed user") }}</a></td>
+      <td>{{ submission.serial }}</td>
+      <td>{{ submission.date_seen }}</td>
+      <td>{{ submission.type }}</td>
+      <td>{{ submission.location }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
