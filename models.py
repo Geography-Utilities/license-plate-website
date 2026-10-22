@@ -63,4 +63,4 @@ class Submissions(db.Model):
     expiration_date = db.Column(db.Date, nullable=True)
     subregion = db.Column(db.Integer, nullable=True)
     notes = db.Column(db.String(500), nullable=True)
-    status = db.Column(db.String(20), nullable=False, default="pending")  # pending, approved, rejected
+    status = db.Column(db.String(20), nullable=True, default="pending")  # pending, approved, rejected

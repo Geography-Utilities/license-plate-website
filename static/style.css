@@ -415,6 +415,21 @@ main {
     margin-bottom: 1.25rem;
 }
 
+.plate-high-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
+}
+
+.plate-high-panel h2 {
+    margin-bottom: .75rem;
+}
+
+.plate-high-panel p:last-child {
+    margin-bottom: 0;
+}
+
 .location-level h3 {
     margin-bottom: .75rem;
     font-size: 1.25rem;
@@ -461,6 +476,11 @@ main {
     .home-hero,
     .home-grid {
         grid-template-columns: 1fr;
+    }
+
+    .plate-high-panel {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
     .home-hero h1 {

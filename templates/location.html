@@ -34,16 +34,18 @@
                                         Submitted by:
                                         <strong>{{ submitter_names.get(high_submission.submitter_id, "Unknown user") }}</strong>
                                     </p>
-                                    <a href="{{ url_for('submit_plate', id=plate.id) }}" role="button" class="outline" style="margin-right: 10px;">
-                                        Submit a new high
-                                    <a href="{{ url_for('plate_page') }}?id={{ plate.id }}" role="button" class="outline">
-                                        View plate
-                                    </a>
-                                {% else %}
+                                    {% else %}
                                     <p class="locations-note">
                                         No submissions available yet.
                                     </p>
-                                {% endif %}
+                                    {% endif %}
+                                    <a href="{{ url_for('submit_plate', id=plate.id) }}" role="button" class="outline" style="margin-right: 10px;">
+                                        Submit a new high
+                                    </a>
+                                    <a href="{{ url_for('plate_page') }}?id={{ plate.id }}" role="button" class="outline">
+                                        View plate
+                                    </a>
+                                
 
                                 {% if plate.notes %}
                                     <p>{{ plate.notes }}</p>

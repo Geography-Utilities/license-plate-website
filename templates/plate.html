@@ -3,31 +3,73 @@
 {% block title %}{{ plate.name }}{% endblock %}
 
 {% block content %}
-<h1>{{ plate.name }} Submissions</h1>
-<p>Plate highs go here once implemented</p>
-<h2>Previous Submissions</h2>
-<table>
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Serial</th>
-      <th>Date Seen</th>
-      <th>Specialty</th>
-      <th>Location Spotted</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for submission in submissions %}
-    <tr>
-      <td>{{ submitter_names.get(submission.submitter_id, "Removed user") }}</a></td>
-      <td>{{ submission.serial }}</td>
-      <td>{{ submission.date_seen }}</td>
-      <td>{{ submission.type }}</td>
-      <td>{{ submission.location }}</td>
+<div class="locations-shell">
+  <header class="locations-heading">
+    <h1>{{ plate.name }}</h1>
+    {% if plate.category %}
+      <p>{{ plate.category }}</p>
+    {% endif %}
+  </header>
 
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+  <section class="location-tree">
+    <section class="location-level" data-level="category">
+      <div class="plate-high-panel">
+        <div>
+          <h2>Latest submission</h2>
 
+          {% if submissions %}
+            {% set high_submission = submissions[0] %}
+            <p>
+              Serial:
+              <strong>{{ high_submission.serial }}</strong>
+            </p>
+            <p>
+              Submitted by:
+              <strong>{{ submitter_names.get(high_submission.submitter_id, "Removed user") }}</strong>
+            </p>
+          {% else %}
+            <p class="locations-note">No submissions are available yet.</p>
+          {% endif %}
+        </div>
+
+        <a href="{{ url_for('submit_plate', id=plate.id) }}" role="button">
+          Submit new high
+        </a>
+      </div>
+    </section>
+
+    <section class="location-level" data-level="category">
+      <h2>Previous submissions</h2>
+
+      {% if submissions %}
+        <div class="overflow-auto">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">User</th>
+                <th scope="col">Serial</th>
+                <th scope="col">Date seen</th>
+                <th scope="col">Specialty</th>
+                <th scope="col">Location spotted</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for submission in submissions %}
+                <tr>
+                  <td>{{ submitter_names.get(submission.submitter_id, "Removed user") }}</td>
+                  <td><strong>{{ submission.serial }}</strong></td>
+                  <td>{{ submission.date_seen }}</td>
+                  <td>{{ submission.type or "-" }}</td>
+                  <td>{{ submission.location or "-" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="locations-note">No previous submissions are available.</p>
+      {% endif %}
+    </section>
+  </section>
+</div>
 {% endblock %}
