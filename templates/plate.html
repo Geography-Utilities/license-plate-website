@@ -27,6 +27,12 @@
               Submitted by:
               <strong>{{ submitter_names.get(high_submission.submitter_id, "Removed user") }}</strong>
             </p>
+            <p>
+              Status:
+              <span class="submission-status submission-status-{{ high_submission.status or 'pending' }}">
+                {{ high_submission.status or "pending" }}
+              </span>
+            </p>
           {% else %}
             <p class="locations-note">No submissions are available yet.</p>
           {% endif %}
@@ -51,6 +57,7 @@
                 <th scope="col">Date seen</th>
                 <th scope="col">Specialty</th>
                 <th scope="col">Location spotted</th>
+                <th scope="col">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -61,6 +68,11 @@
                   <td>{{ submission.date_seen }}</td>
                   <td>{{ submission.type or "-" }}</td>
                   <td>{{ submission.location or "-" }}</td>
+                  <td>
+                    <span class="submission-status submission-status-{{ submission.status or 'pending' }}">
+                      {{ submission.status or "pending" }}
+                    </span>
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>

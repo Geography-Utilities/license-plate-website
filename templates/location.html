@@ -34,6 +34,12 @@
                                         Submitted by:
                                         <strong>{{ submitter_names.get(high_submission.submitter_id, "Unknown user") }}</strong>
                                     </p>
+                                    <p>
+                                        Status:
+                                        <span class="submission-status submission-status-{{ high_submission.status or 'pending' }}">
+                                            {{ high_submission.status or "pending" }}
+                                        </span>
+                                    </p>
                                     {% else %}
                                     <p class="locations-note">
                                         No submissions available yet.
