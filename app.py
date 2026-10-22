@@ -245,7 +245,7 @@ def edit_user(id):
 
 @app.route('/locations')
 def locations():
-    user_perms = get_permission_level() or None # grab user permissions to determine whether to display "add location" button
+    user_perms = get_permission_level() or 0 # grab user permissions to determine whether to display "add location" button
     locations = Location.query.order_by(Location.name).filter_by(level=3).all()  # Only fetch level 3 locations (regions). this is temporary while US is the only supported country
     return render_template(
         'locations.html',
