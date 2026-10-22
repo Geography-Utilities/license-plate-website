@@ -159,12 +159,45 @@ python3 -c "import urllib.parse; print(urllib.parse.quote('your-password', safe=
 
 ### systemd service
 
-The gunicorn service loads this file via `EnvironmentFile`:
+Gunicorn does not automatically load `.env` files. The systemd unit must load
+the production environment explicitly, including `FLASK_ENV=production`:
 
 ```ini
+[Unit]
+Description=License Plates Gunicorn service
+After=network.target
+
 [Service]
+User=server
+Group=www-data
+WorkingDirectory=/home/server/license_plates_site
 EnvironmentFile=/etc/licenseplates/.env
-...
+ExecStart=/home/server/license_plates_site/.venv/bin/gunicorn \
+  --workers 3 \
+  --bind 127.0.0.1:8000 \
+  app:app
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+The environment file must contain at least:
+
+```dotenv
+FLASK_ENV=production
+FLASK_SECRET_KEY=<long-random-secret>
+DATABASE_URL=postgresql://plates_app:<real-password>@localhost:5432/plates_db
+RATELIMIT_STORAGE_URI=redis://localhost:6379/0
+```
+
+Install or update the unit at `/etc/systemd/system/plates-gunicorn.service`,
+then run:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now plates-gunicorn
+sudo systemctl status plates-gunicorn
 ```
 
 After changing the `.env` file or the unit file itself:
@@ -172,6 +205,15 @@ After changing the `.env` file or the unit file itself:
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl restart plates-gunicorn
+```
+
+If the service still reports that `FLASK_ENV` is missing, verify that
+systemd can read the environment file and that the variable is present:
+
+```bash
+sudo systemctl show plates-gunicorn --property=EnvironmentFiles
+sudo grep '^FLASK_ENV=' /etc/licenseplates/.env
+sudo journalctl -u plates-gunicorn -n 50 --no-pager
 ```
 
 ## 6. Running `flask db` commands manually (SSH)

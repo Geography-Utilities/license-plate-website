@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Approve Plates{% endblock %}
+
+{% block content %}
+
+{# takes all plates that have been submitted and not yet reviewed and displays them in a table with a link to approve each one #}
+{# /moderate/approve?id=<id> is the endpoint to approve a specific plate #}
+{# approved plates that are actually highs will be added to CurrentHighs, old plates removed #}
+{# submissions table now has element status with options [pending, approved, rejected] #}
+
+{% endblock %}
